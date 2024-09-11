@@ -17,7 +17,7 @@ npm install
 3. **Configurar o banco de dados:** 
 - Crie um banco de dados PostgreSQL com o nome 'bflow':
   ```
-  CREATE DATABASE theboys;
+  CREATE DATABASE bflow;
   ```
 - Ajuste as credenciais do banco de dados no arquivo `server.js`, se necessário.
 
@@ -42,18 +42,18 @@ Além disso contamos com o arquivo .env que faz o controle das variáveis sensí
 ### Bibliotecas
 Para funcionamento total do projeto contamos com o uso de bibliotecas que facilitam a estruturação:
 
-[ x ] Express
+[x] Express
 - Estrutura as rotas HTTP
 
-[ x ] Dotenv
+[x] Dotenv
 - Configura o controle de variáveis sensíveis e integra o arquivo .env
 
-[ x ] Nodemon
+[x] Nodemon
 - Atualiza o código e reinicia a aplicação automaticamente
 
-[ x ] PG
+[x] PG
 - Faz a conexão com o banco de dados em PostgreSQL
 
-[  ] JWT (JSON Web Token)
+[] JWT (JSON Web Token)
 - Gera Tokens para login de usuários
 
