@@ -54,6 +54,6 @@ Para funcionamento total do projeto contamos com o uso de bibliotecas que facili
 - [x] [PG](https://www.npmjs.com/package/pg)
 - Faz a conexão com o banco de dados em PostgreSQL
 
-- [ ] [JWT (JSON Web Token)](https://www.npmjs.com/package/jsonwebtoken)
+- [x] [JWT (JSON Web Token)](https://www.npmjs.com/package/jsonwebtoken)
 - Gera Tokens para login de usuários
 
