@@ -35,25 +35,25 @@ ServiceDesk-backend/
 ```
 
 ## Tecnologias
-Nossa aplicação foi desenvolvida com base no ECMAscript (Javascript), optamos pelo uso do **_Node.JS_** como runtime da aplicação pela eficiência e escalabilidade do motor _V8_. Nosso gerenciador de pacotes foi o _NPM_.
+Nossa aplicação foi desenvolvida com base no ECMAscript (Javascript), optamos pelo uso do **_[Node.JS](https://nodejs.org/pt)_** como runtime da aplicação pela eficiência e escalabilidade do motor _V8_. Nosso gerenciador de pacotes foi o _NPM_.
 
 Além disso contamos com o arquivo .env que faz o controle das variáveis sensíveis.
 
 ### Bibliotecas
 Para funcionamento total do projeto contamos com o uso de bibliotecas que facilitam a estruturação:
 
-[x] Express
+- [x] [Express](https://expressjs.com/)
 - Estrutura as rotas HTTP
 
-[x] Dotenv
+- [x] [Dotenv](https://www.npmjs.com/package/dotenv)
 - Configura o controle de variáveis sensíveis e integra o arquivo .env
 
-[x] Nodemon
+- [x] [Nodemon](https://nodemon.io/)
 - Atualiza o código e reinicia a aplicação automaticamente
 
-[x] PG
+- [x] [PG](https://www.npmjs.com/package/pg)
 - Faz a conexão com o banco de dados em PostgreSQL
 
-[] JWT (JSON Web Token)
+- [] [JWT (JSON Web Token)](https://www.npmjs.com/package/jsonwebtoken)
 - Gera Tokens para login de usuários
 
