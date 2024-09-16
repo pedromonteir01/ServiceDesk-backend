@@ -181,7 +181,7 @@ const createUser = async (req, res) => {
         errors.push('invalid_role');
     }
 
-    if (errors.length == 0) {
+    if (errors.length !== 0) {
         return res.status(400).send({
             errors: errors
         });
@@ -265,7 +265,7 @@ const updateUser = async (req, res) => {
         errors.push('invalid_role');
     }
 
-    if (errors.length == 0) {
+    if (errors.length !== 0) {
         return res.status(400).send({
             errors: errors
         });
@@ -324,4 +324,4 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = { getAllUsers, getUsersByName, getUserByEmail, createUser, updateUser, deleteUser };
+module.exports = { getAllUsers, getUsersByName, getUserByEmail, getUserByRole, createUser, updateUser, deleteUser };
