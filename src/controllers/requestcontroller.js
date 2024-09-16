@@ -1,8 +1,11 @@
 const pool = require("../database/database.config");
 
-async function getAllRequests(req, res) {
+// Função para pegar todas as requisições
+const getAllRequests = async function(req, res) {
   try {
+    // Requisição para o banco
     const result = await pool.query("SELECT * FROM requests");
+    // Resposta em JSON
     res.json({
       status: "success",
       message: "Requests List",
@@ -10,7 +13,9 @@ async function getAllRequests(req, res) {
       requests: result.rows,
     });
   } catch (error) {
+    // Retorno do erro em JSON
     console.error("Error: Getting all requests ", error);
+    // Retorno do erro em JSON
     res.status(500).send({
       status: "error",
       message: "Error getting all requests",
@@ -18,25 +23,33 @@ async function getAllRequests(req, res) {
   }
 }
 
-async function getRequestById(req, res) {
+// Função para pegar uma requisição por id
+const getRequestById = async function(req, res) {
   try {
+    // Id por params
     const { id } = req.params;
+    // Requisição para o banco
     const result = await pool.query("SELECT * FROM requests WHERE id = $1", [
       id,
     ]);
     if (result.rowCount === 0) {
+    // Retorno de erro em JSON
       res.json({
         status: "error",
         message: `Request with id ${id} not found`,
       });
     }
+    // Resposta em JSON
     res.json({
       status: "success",
       message: `Request with id ${id}`,
       request: result.rows,
     });
+    // Tratamento de erro
   } catch (error) {
+    // Retorno do erro em console
     console.error("Error: Getting request by id ", error);
+    // Retorno do erro em JSON
     res.status(500).send({
       status: "error",
       message: "Error getting request by id",
