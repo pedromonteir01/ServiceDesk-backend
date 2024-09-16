@@ -1,13 +1,14 @@
 const { Router } = require('express');
 const usersController = require("../controllers/users.controller");
-
+//inicializa a rota
 const usersRouter = Router();
 
+//métodos
 usersRouter.get("/", usersController.getAllUsers);
-usersRouter.post("/", usersController.createUser);
-usersRouter.put("/:email", usersController.updateUser);
 usersRouter.get("/name/:name", usersController.getUsersByName);
 usersRouter.get("/:email", usersController.getUserByEmail);
+usersRouter.post("/", usersController.createUser);
+usersRouter.put("/:email", usersController.updateUser);
 usersRouter.delete("/:email", usersController.deleteUser);
 
 module.exports = usersRouter;
