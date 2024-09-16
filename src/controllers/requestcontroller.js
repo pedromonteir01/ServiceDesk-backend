@@ -243,20 +243,27 @@ const updateRequest = async function (req, res) {
 // Função para deletar uma requisição
 const deleteRequest = async function (req, res) {
   try {
+    // Id por params
     const { id } = req.params;
+    // Requisição para o banco
     const result = await pool.query("DELETE FROM requests WHERE id = $1", [id]);
     if (result.rowCount === 0) {
+      // Resposta de erro em JSON
       res.json({
         status: "error",
         message: `Request with id ${id} not found`,
       });
     }
+    // Resposta de sucesso em JSON
     res.json({
       status: "success",
       message: `Request with id ${id} deleted`,
     });
+    // Tratamento de erro
   } catch (error) {
+    // Retorno do erro em console
     console.error("Error: Deleting request ", error);
+    // Retorno do erro em JSON
     res.status(500).send({
       status: "error",
       message: "Error deleting request",
