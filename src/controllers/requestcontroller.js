@@ -196,33 +196,43 @@ const createRequest= async function (req, res) {
   }
 }
 
-async function updateRequest(req, res) {
+// Função para atualizar uma requisição
+const updateRequest = async function (req, res) {
   try {
+    // Id por params
     const { id } = req.params;
+    // Dados da requisição
     const { local, description, user, status, statusMessage, image } = req.body;
-    if (!local || !image) {
+    if (!local || !image) {0
+      // Retorno de erro em JSON
       return res.status(400).send({
         status: "error",
         message: "Local and Image are required",
       });
     }
+    // Requisição para o banco
     const result = await pool.query(
       "UPDATE requests SET local = $1, description = $2, user = $3, status = $4, statusMessage = $5, image = $6 WHERE id = $7 RETURNING *",
       [local, description, user, status, statusMessage, image, id]
     );
     if (result.rowCount === 0) {
+      // Resposta de erro em JSON
       res.json({
         status: "error",
         message: `Request with id ${id} not found`,
       });
     }
+    // Resposta de sucesso em JSON
     res.json({
       status: "success",
       message: `Request with id ${id} updated`,
       request: result.rows,
     });
+    // Tratamento de erro
   } catch (error) {
+    // Retorno do erro em console
     console.error("Error: Updating request ", error);
+    // Retorno do erro em JSON
     res.status(500).send({
       status: "error",
       message: "Error updating request",
