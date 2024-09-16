@@ -126,25 +126,33 @@ const getRequestByStatus = async function (req, res) {
   }
 }
 
-async function getRequestByUser(req, res) {
+// Função para pegar uma requisição por usuário
+const getRequestByUser = async function (req, res) {
   try {
+    // Usuário por params
     const { user } = req.params;
+    // Requisição para o banco
     const result = await pool.query("SELECT * FROM requests WHERE user = $1", [
       user,
     ]);
     if (result.rowCount === 0) {
+      // Retorno de erro em JSON
       res.json({
         status: "error",
         message: `Request with user ${user} not found`,
       });
     }
+    // Resposta de sucesso em JSON
     res.json({
       status: "success",
       message: `Request with user ${user}`,
       request: result.rows,
     });
+    // Tratamento de erro
   } catch (error) {
+    // Retorno do erro em console
     console.error("Error: Getting request by user ", error);
+    // Retorno do erro em JSON
     res.status(500).send({
       status: "error",
       message: "Error getting request by user",
