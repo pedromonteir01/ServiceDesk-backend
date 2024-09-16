@@ -240,7 +240,8 @@ const updateRequest = async function (req, res) {
   }
 }
 
-async function deleteRequest(req, res) {
+// Função para deletar uma requisição
+const deleteRequest = async function (req, res) {
   try {
     const { id } = req.params;
     const result = await pool.query("DELETE FROM requests WHERE id = $1", [id]);
