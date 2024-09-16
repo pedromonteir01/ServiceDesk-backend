@@ -38,7 +38,7 @@ const getUsersByName = async (req, res) => {
             [`%${name.toLowerCase()}%`]
         );
         //resposta em JSON
-        if (!users) {
+        if (users) {
             return res.status(200).send({
                 results: users.rowCount,
                 users: users.rows
@@ -93,7 +93,7 @@ const getUserByRole = async (req, res) => {
     const { role } = req.params;
     let occupation;
 
-    if(role == student) {
+    if(role == 'student') {
         occupation = true;
     } else {
         occupation = false;
