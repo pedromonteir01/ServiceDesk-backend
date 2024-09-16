@@ -1,6 +1,6 @@
 const pool = require('../database/database.config');
 
-const special = ['!', '@', '#', '$', '%', '¨', '&', '*', '(', ')', '/', '?', '°', '|', '^', '`'];
+const special = ['!', '@', '#', '$', '%', '&', '*', '(', ')', '/', '?', '|'];
 const verifyElements = (array, type) => {
     return array.every(element => typeof element === type);
 }
@@ -8,7 +8,7 @@ const verifyElements = (array, type) => {
 const getAllUsers = async (req, res) => {
     try {
         //requisição para o banco
-        const users = await pool.query('SELECT * FROM users');
+        const users = await pool.query('SELECT * FROM users;');
         //resposta em JSON
         return res.status(200).send({
             results: users.rowCount,
@@ -28,7 +28,7 @@ const getUsersByName = async (req, res) => {
     const { name } = req.params;
     try {
         //requisição para o banco
-        const users = await pool.query('SELECT * FROM users WHERE name LIKE $1',
+        const users = await pool.query('SELECT * FROM users WHERE name LIKE $1;',
             [`%${name.toLowerCase()}%`]
         );
         //resposta em JSON
@@ -58,7 +58,7 @@ const getUserByEmail = async (req, res) => {
     const { email } = req.params;
     try {
         //requisição para o banco
-        const user = await pool.query('SELECT * FROM users WHERE email=$1',
+        const user = await pool.query('SELECT * FROM users WHERE email=$1;',
             [email]
         );
         //resposta em JSON
@@ -70,6 +70,43 @@ const getUserByEmail = async (req, res) => {
             return res.status(404).send({
                 error: 404,
                 message: 'User not found: ' + email
+            });
+        }
+
+    } catch (e) {
+        //retorno do erro em JSON
+        return res.status(500).send({
+            error: 'Error: ' + e,
+            message: 'Error in get user: ' + email
+        });
+    }
+}
+
+const getUserByRole = async (req, res) => {
+    //função por params
+    const { role } = req.params;
+    let occupation;
+
+    if(role == student) {
+        occupation = true;
+    } else {
+        occupation = false;
+    }
+
+    try {
+        //requisição para o banco
+        const users = await pool.query('SELECT * FROM users WHERE isStudent=$1;',
+            [occupation]
+        );
+        //resposta em JSON
+        if (users.rowCount !== 0) {
+            return res.status(200).send({
+                users: users.rows
+            });
+        } else {
+            return res.status(404).send({
+                error: 404,
+                message: 'Users not found'
             });
         }
 
@@ -146,7 +183,7 @@ const createUser = async (req, res) => {
 
         try {
             //requisição para o banco
-            await pool.query('INSERT INTO users(name, email, password, isAdmin, isStudent) VALUES($1, $2, $3, $4, $5)',
+            await pool.query('INSERT INTO users(name, email, password, isAdmin, isStudent) VALUES($1, $2, $3, $4, $5);',
                 [name, email, password, isAdmin, isStudent]
             );
             //resposta em JSON
@@ -230,11 +267,11 @@ const updateUser = async (req, res) => {
 
         try {
             //requisição para o banco
-            await pool.query('UPDATE users SET name=$1, email=$2, isAdmin=$3, isStudents=$4 WHERE email=$5',
+            await pool.query('UPDATE users SET name=$1, email=$2, isAdmin=$3, isStudents=$4 WHERE email=$5;',
                 [name, email, password, isAdmin, isStudent, emailAux]
             );
             //resposta em JSON
-            return res.status(201).send({
+            return res.status(200).send({
                 message: 'updated with success'
             });
         } catch (e) {
@@ -251,21 +288,34 @@ const deleteUser = async (req, res) => {
     //email por params
     const { email } = req.params;
 
-    await pool.query('DELETE FROM users WHERE email=$1',
-        [email]
-    );
+    try {
+        //coleta usuário
+        const user = await pool.query('SELECT * FROM users WHERE email=$1;',
+            [email]
+        );
 
-    if (result.rowCount === 0) {
-        return res.send({
-          status: "error",
-          message: `User with email ${email} not found`,
+        //verifica se existe
+        if (!user) {
+            return res.status(404).send({
+                error: 'user not found'
+            });
+        } else {
+            //se existir, deleta
+            await pool.query('DELETE FROM users WHERE email=$1;',
+                [email]
+            );
+
+            return res.status(200).send({
+                message: 'user deleted'
+            });
+        }
+    } catch (e) {
+        //retorno do erro em JSON
+        return res.status(500).send({
+            error: 'Error: ' + e,
+            message: 'Error in delete user'
         });
-    } else {
-      return res.send({
-        status: "success",
-        message: `User with email ${email} deleted`,
-      });
     }
 }
 
-module.exports = { getAllUsers, getUsersByName, getUserByEmail, createUser, updateUser };
+module.exports = { getAllUsers, getUsersByName, getUserByEmail, createUser, updateUser, deleteUser };
