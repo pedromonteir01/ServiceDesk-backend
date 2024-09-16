@@ -10,10 +10,16 @@ const getAllUsers = async (req, res) => {
         //requisição para o banco
         const users = await pool.query('SELECT * FROM users;');
         //resposta em JSON
-        return res.status(200).send({
-            results: users.rowCount,
-            users: users.rows
-        });
+        if(users.rowCount == 0) {
+            return res.status(200).send({
+                message: 'none_users'
+            })
+        } else {
+            return res.status(200).send({
+                results: users.rowCount,
+                users: users.rows
+            });
+        }
     } catch (e) {
         //retorno do erro em JSON
         return res.status(500).send({
