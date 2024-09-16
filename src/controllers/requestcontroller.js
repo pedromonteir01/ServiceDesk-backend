@@ -160,26 +160,35 @@ const getRequestByUser = async function (req, res) {
   }
 }
 
-async function createRequest(req, res) {
+// Função para criar uma requisição
+const createRequest= async function (req, res) {
+  // Dados da requisição
   const { local, description, user, status, statusMessage, image } = req.body;
   try {
+    // Verificação de campos
     if (!local || !image) {
+      // Retorno de erro em JSON
       return res.status(400).send({
         status: "error",
         message: "Local and Image are required",
       });
     }
+    // Requisição para o banco
     const result = await pool.query(
       "INSERT INTO requests (local, description, user, status, statusMessage, image) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       [local, description, user, status, statusMessage, image]
     );
+    // Resposta de sucesso em JSON
     res.json({
       status: "success",
       message: "Request created",
       request: result.rows,
     });
+    // Tratamento de erro
   } catch (error) {
+    // Retorno do erro em console
     console.error("Error: Creating request ", error);
+    // Retorno do erro em JSON
     res.status(500).send({
       status: "error",
       message: "Error creating request",
