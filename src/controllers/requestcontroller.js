@@ -279,5 +279,6 @@ module.exports = {
   getRequestByUser,
   createRequest,
   updateRequest,
-  deleteRequest,
-};
+  deleteRequest
+  
+}
