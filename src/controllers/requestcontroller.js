@@ -57,26 +57,34 @@ const getRequestById = async function(req, res) {
   }
 }
 
-async function getRequestByLocal(req, res) {
+// Função para pegar uma requisição por ambiente/local
+const getRequestByLocal = async function(req, res) {
   try {
+    // Local por params
     const { local } = req.params;
+    // Requisição para o banco
     const result = await pool.query(
       "SELECT * FROM requests WHERE LOWER(local) LIKE $1",
       [`%${local.toLowerCase()}%`]
     );
     if (result.rowCount === 0) {
+      // Retorno de erro em JSON
       res.json({
         status: "error",
         message: `Request with local ${local} not found`,
       });
     }
+    // Resposta de sucesso em JSON
     res.json({
       status: "success",
       message: `Request with local ${local}`,
       request: result.rows,
     });
+    // Tratamento de erro
   } catch (error) {
+    // Retorno do erro em console
     console.error("Error: Getting request by local ", error);
+    // Retorno do erro em JSON
     res.status(500).send({
       status: "error",
       message: "Error getting request by local",
