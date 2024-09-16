@@ -92,26 +92,33 @@ const getRequestByLocal = async function(req, res) {
   }
 }
 
-async function getRequestByStatus(req, res) {
+// Função para pegar uma requisição por status
+const getRequestByStatus = async function (req, res) {
   try {
+    // Status por params
     const { status } = req.params;
+    // Requisição para o banco
     const result = await pool.query(
       "SELECT * FROM requests WHERE status = $1",
       [status]
     );
     if (result.rowCount === 0) {
+      // Retorno de erro em JSON
       res.json({
         status: "error",
         message: `Request with status ${status} not found`,
       });
     }
+    // Resposta de sucesso em JSON
     res.json({
       status: "success",
       message: `Request with status ${status}`,
       request: result.rows,
     });
+    // Tratamento de erro
   } catch (error) {
     console.error("Error: Getting request by status ", error);
+    // Retorno do erro em JSON
     res.status(500).send({
       status: "error",
       message: "Error getting request by status",
