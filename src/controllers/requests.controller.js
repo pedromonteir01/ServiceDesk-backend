@@ -172,7 +172,6 @@ const createRequest = async (req, res) => {
       errors.push('short_description');
       break;
     default:
-      errors.push('none_description');
       break;
   }
 
@@ -184,7 +183,6 @@ const createRequest = async (req, res) => {
     case statusRequest === 'inconclued':
       statusRequest = false;
     default:
-      errors.push('statusRequest_invalid');
       break;
   }
 
@@ -196,14 +194,27 @@ const createRequest = async (req, res) => {
       errors.push('invalid_date_type');
       break;
     default:
-      errors.push('date_invalid');
       break;
   }
 
-  if(!date_conclusion) {
+  if (!date_conclusion) {
     date_conclusion = null;
   } else {
     errors.push('logic_error');
+  }
+
+  switch (email) {
+    case typeof email !== 'string':
+      errors.push('invalid_email');
+      break;
+    case email.length < 10:
+      errors.push('short_email');
+      break;
+    case !email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br'):
+      errors.push('invalid_domain');
+      break;
+    default:
+      break;
   }
 
   try {
@@ -263,7 +274,6 @@ const updateRequest = async (req, res) => {
       errors.push('short_description');
       break;
     default:
-      errors.push('none_description');
       break;
   }
 
@@ -275,7 +285,6 @@ const updateRequest = async (req, res) => {
     case statusRequest === 'inconclued':
       statusRequest = false;
     default:
-      errors.push('statusRequest_invalid');
       break;
   }
 
@@ -287,14 +296,27 @@ const updateRequest = async (req, res) => {
       errors.push('invalid_date_type');
       break;
     default:
-      errors.push('date_invalid');
       break;
   }
 
-  if(!date_conclusion) {
+  if (!date_conclusion) {
     date_conclusion = null;
   } else {
     errors.push('logic_error');
+  }
+
+  switch (email) {
+    case typeof email !== 'string':
+      errors.push('invalid_email');
+      break;
+    case email.length < 10:
+      errors.push('short_email');
+      break;
+    case !email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br'):
+      errors.push('invalid_domain');
+      break;
+    default:
+      break;
   }
 
   try {
@@ -326,7 +348,7 @@ const updateRequest = async (req, res) => {
       status: "error",
       message: "Error updating request",
     });
-  } 
+  }
 };
 
 // Função para deletar uma requisição
