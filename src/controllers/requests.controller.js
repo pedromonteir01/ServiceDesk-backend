@@ -233,8 +233,8 @@ const createRequest = async (req, res) => {
 
     try {
       /* requisição para o banco */
-      const request = await pool.query(
-        "INSERT INTO requests (image, description, local, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      await pool.query(
+        "INSERT INTO requests (image, description, local, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7);",
         [
           image,
           description,
@@ -248,8 +248,7 @@ const createRequest = async (req, res) => {
       /* resposta em JSON */
       return res.status(201).send({
         status: "success",
-        message: "Request created",
-        request: request.rows,
+        message: "Request created"
       });
     } catch (e) {
       /* retorno do erro em console */
@@ -345,8 +344,8 @@ const updateRequest = async (req, res) => {
 
     try {
       // Requisição para o banco
-      const request = await pool.query(
-        "UPDATE requests SET image = $1, description = $2, local = $3, status_request = $4, date_request = $5, date_conclusion = $6, email = $7 WHERE id = $8 RETURNING *",
+      await pool.query(
+        "UPDATE requests SET image = $1, description = $2, local = $3, status_request = $4, date_request = $5, date_conclusion = $6, email = $7 WHERE id = $8;",
         [
           image,
           description,
@@ -361,8 +360,7 @@ const updateRequest = async (req, res) => {
       // Resposta em JSON
       return res.status(200).send({
         status: "success",
-        message: "Request updated",
-        request: request.rows,
+        message: "Request updated"
       });
     } catch (e) {
       // Retorno do erro em console
