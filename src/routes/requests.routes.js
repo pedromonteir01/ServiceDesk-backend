@@ -12,8 +12,6 @@ requestsRouter.get('/user/:user', requestsController.getRequestByUser);
 requestsRouter.post('/', requestsController.createRequest);
 requestsRouter.put('/:id', requestsController.updateRequest);
 requestsRouter.delete('/:id', requestsController.deleteRequest);
-
-//toDo
-requestsRouter.patch('/'); //conclusion
+requestsRouter.patch('/status/:id', requestsController.concludeStatus); 
 
 module.exports = requestsRouter;

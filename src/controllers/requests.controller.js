@@ -431,7 +431,25 @@ const deleteRequest = async (req, res) => {
       message: "Error in delete request",
     });
   }
-};
+}
+
+const concludeStatus = async(req, res) => {
+  //id por params
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const request = (await pool.query('SELECT * FROM requests WHERE id=$1',[id])).rows;
+    if(!request) {
+      return res.status(404).send({ message: 'request not found' });
+    } else {
+      await pool.query('UPDATE users SET status_request=$1 WHERE id=$2', [status, id]);
+      return res.status(200).send({ message: 'request conclued' });
+    }
+  } catch(e) {
+    return res.status(500).send({ error: e, message: 'server error' });
+  }
+}
 
 module.exports = {
   getAllRequests,
@@ -442,4 +460,5 @@ module.exports = {
   createRequest,
   updateRequest,
   deleteRequest,
+  concludeStatus
 };
