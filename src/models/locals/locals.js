@@ -1,4 +1,1 @@
-const locals = [
-
-];
-
+const locals = ["Biblioteca", "Cantina", "Secretária", "Pátio"];
