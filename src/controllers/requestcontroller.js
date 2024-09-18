@@ -1,275 +1,266 @@
+const req = require("express/lib/request");
 const pool = require("../database/database.config");
 
 // Função para pegar todas as requisições
-const getAllRequests = async function(req, res) {
+const getAllRequests = async (req, res) => {
   try {
-    // Requisição para o banco
-    const result = await pool.query("SELECT * FROM requests");
-    // Resposta em JSON
-    res.json({
-      status: "success",
-      message: "Requests List",
-      quantity: result.rowCount,
-      requests: result.rows,
-    });
-  } catch (error) {
-    // Retorno do erro em JSON
-    console.error("Error: Getting all requests ", error);
-    // Retorno do erro em JSON
-    res.status(500).send({
-      status: "error",
-      message: "Error getting all requests",
+    /* requisição para o banco */
+    const requests = await pool.query("SELECT * FROM requests;");
+    /* resposta em json */
+    if (requests.rowCount == 0) {
+      return res.status(200).send({
+        message: "none_requests",
+      });
+    } else {
+      return res.status(200).send({
+        results: requests.rowCount,
+        requests: requests.rows,
+      });
+    }
+  } catch (e) {
+    /* retorno do erro em json */
+    return res.status(500).send({
+      error: "Error: " + e,
+      message: "Error in get all requests",
     });
   }
-}
+};
 
 // Função para pegar uma requisição por id
-const getRequestById = async function(req, res) {
+const getRequestById = async (req, res) => {
+  /* id por params */
+  const { id } = req.params;
   try {
-    // Id por params
-    const { id } = req.params;
-    // Requisição para o banco
-    const result = await pool.query("SELECT * FROM requests WHERE id = $1", [
+    /* requisição para o banco */
+    const request = await pool.query("SELECT * FROM requests WHERE id = $1", [
       id,
     ]);
-    if (result.rowCount === 0) {
-    // Retorno de erro em JSON
-      res.json({
-        status: "error",
-        message: `Request with id ${id} not found`,
+    /* resposta em json */
+    if (request) {
+      return res.status(200).send({
+        results: request.rowCount,
+        request: request.rows,
+      });
+    } else {
+      return res.status(404).send({
+        error: 404,
+        message: "Request not found with this id: " + id,
       });
     }
-    // Resposta em JSON
-    res.json({
-      status: "success",
-      message: `Request with id ${id}`,
-      request: result.rows,
-    });
-    // Tratamento de erro
-  } catch (error) {
-    // Retorno do erro em console
-    console.error("Error: Getting request by id ", error);
-    // Retorno do erro em JSON
-    res.status(500).send({
-      status: "error",
-      message: "Error getting request by id",
+  } catch (e) {
+    /* retorno do erro em json */
+    return res.status(500).send({
+      error: "Error: " + e,
+      message: "Error in get request: " + id,
     });
   }
-}
+};
 
 // Função para pegar uma requisição por ambiente/local
-const getRequestByLocal = async function(req, res) {
+const getRequestByLocal = async (req, res) => {
+  /* local por params */
+  const { local } = req.params;
   try {
-    // Local por params
-    const { local } = req.params;
-    // Requisição para o banco
-    const result = await pool.query(
-      "SELECT * FROM requests WHERE LOWER(local) LIKE $1",
+    /* requisição para o banco */
+    const requests = await pool.query(
+      "SELECT * FROM requests WHERE local LIKE $1;",
       [`%${local.toLowerCase()}%`]
     );
-    if (result.rowCount === 0) {
-      // Retorno de erro em JSON
-      res.json({
-        status: "error",
-        message: `Request with local ${local} not found`,
+    /* resposta em json */
+    if (requests) {
+      return res.status(200).send({
+        results: requests.rowCount,
+        requests: requests.rows,
+      });
+    } else {
+      return res.status(404).send({
+        error: 404,
+        message: "Requests not found with this local: " + local,
       });
     }
-    // Resposta de sucesso em JSON
-    res.json({
-      status: "success",
-      message: `Request with local ${local}`,
-      request: result.rows,
-    });
-    // Tratamento de erro
-  } catch (error) {
-    // Retorno do erro em console
-    console.error("Error: Getting request by local ", error);
-    // Retorno do erro em JSON
-    res.status(500).send({
-      status: "error",
-      message: "Error getting request by local",
+  } catch (e) {
+    /* retorno do erro em json */
+    return res.status(500).send({
+      error: "Error: " + e,
+      message: "Error in get requests by local: " + local,
     });
   }
-}
+};
 
 // Função para pegar uma requisição por status
-const getRequestByStatus = async function (req, res) {
+const getRequestByStatus = async (req, res) => {
+  // status por params
+  const { status } = req.params;
+
   try {
-    // Status por params
-    const { status } = req.params;
-    // Requisição para o banco
-    const result = await pool.query(
-      "SELECT * FROM requests WHERE status = $1",
+    /* requisição para o banco */
+    const requests = await pool.query(
+      "SELECT * FROM requests WHERE status = $1;",
       [status]
     );
-    if (result.rowCount === 0) {
-      // Retorno de erro em JSON
-      res.json({
-        status: "error",
-        message: `Request with status ${status} not found`,
+    /* resposta em json */
+    if (requests) {
+      return res.status(200).send({
+        results: requests.rowCount,
+        requests: requests.rows,
+      });
+    } else {
+      return res.status(404).send({
+        error: 404,
+        message: "Requests not found with this status: " + status,
       });
     }
-    // Resposta de sucesso em JSON
-    res.json({
-      status: "success",
-      message: `Request with status ${status}`,
-      request: result.rows,
-    });
-    // Tratamento de erro
-  } catch (error) {
-    console.error("Error: Getting request by status ", error);
-    // Retorno do erro em JSON
-    res.status(500).send({
-      status: "error",
-      message: "Error getting request by status",
+  } catch (e) {
+    /* retorno do erro em json */
+    return res.status(500).send({
+      error: "Error: " + e,
+      message: "Error in get requests by status: " + status,
     });
   }
-}
+};
 
 // Função para pegar uma requisição por usuário
-const getRequestByUser = async function (req, res) {
+const getRequestByUser = async (req, res) => {
+  // usuário por params
+  const { user } = req.params;
   try {
-    // Usuário por params
-    const { user } = req.params;
-    // Requisição para o banco
-    const result = await pool.query("SELECT * FROM requests WHERE user = $1", [
-      user,
-    ]);
-    if (result.rowCount === 0) {
-      // Retorno de erro em JSON
-      res.json({
-        status: "error",
-        message: `Request with user ${user} not found`,
+    /* requisição para o banco */
+    const requests = await pool.query(
+      "SELECT * FROM requests WHERE user = $1;",
+      [user]
+    );
+    /* resposta em json */
+    if (requests) {
+      return res.status(200).send({
+        results: requests.rowCount,
+        requests: requests.rows,
+      });
+    } else {
+      return res.status(404).send({
+        error: 404,
+        message: "Requests not found with this user: " + user,
       });
     }
-    // Resposta de sucesso em JSON
-    res.json({
-      status: "success",
-      message: `Request with user ${user}`,
-      request: result.rows,
-    });
-    // Tratamento de erro
-  } catch (error) {
-    // Retorno do erro em console
-    console.error("Error: Getting request by user ", error);
-    // Retorno do erro em JSON
-    res.status(500).send({
-      status: "error",
-      message: "Error getting request by user",
+  } catch (e) {
+    /* retorno do erro em json */
+    return res.status(500).send({
+      error: "Error: " + e,
+      message: "Error in get requests by user: " + user,
     });
   }
-}
+};
 
 // Função para criar uma requisição
-const createRequest= async function (req, res) {
-  // Dados da requisição
+const createRequest = async (req, res) => {
+  /* array para tratativa dos erros das regras de negocio */
+  let errors = [];
+
+  /* body pra criar elementos */
   const { local, description, user, status, statusMessage, image } = req.body;
+
+  if (!local || !image) {
+    /* retorno de erro em JSON */
+    return res.status(400).send({
+      status: "error",
+      message: "Local and Image are required",
+    });
+  }
+
   try {
-    // Verificação de campos
-    if (!local || !image) {
-      // Retorno de erro em JSON
-      return res.status(400).send({
-        status: "error",
-        message: "Local and Image are required",
-      });
-    }
-    // Requisição para o banco
-    const result = await pool.query(
+    /* requisição para o banco */
+    const request = await pool.query(
       "INSERT INTO requests (local, description, user, status, statusMessage, image) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       [local, description, user, status, statusMessage, image]
     );
-    // Resposta de sucesso em JSON
-    res.json({
+    /* resposta em JSON */
+    return res.status(201).send({
       status: "success",
       message: "Request created",
-      request: result.rows,
+      request: request.rows,
     });
-    // Tratamento de erro
-  } catch (error) {
-    // Retorno do erro em console
-    console.error("Error: Creating request ", error);
-    // Retorno do erro em JSON
-    res.status(500).send({
+  } catch (e) {
+    /* retorno do erro em console */
+    console.error("Error: Creating request ", e);
+    /* retorno do erro em JSON */
+    return res.status(500).send({
       status: "error",
       message: "Error creating request",
     });
   }
-}
+};
 
 // Função para atualizar uma requisição
-const updateRequest = async function (req, res) {
+const updateRequest = async (req, res) => {
+  let errors = [];
+
+  // Id por params
+  const { id } = req.params;
+  // Body para criar elementos
+  const { local, description, user, status, statusMessage, image } = req.body;
+
+  if (!local || !image) {
+    // Retorno de erro em JSON
+    return res.status(400).send({
+      status: "error",
+      message: "Local and Image are required",
+    });
+  }
+
   try {
-    // Id por params
-    const { id } = req.params;
-    // Dados da requisição
-    const { local, description, user, status, statusMessage, image } = req.body;
-    if (!local || !image) {0
-      // Retorno de erro em JSON
-      return res.status(400).send({
-        status: "error",
-        message: "Local and Image are required",
-      });
-    }
     // Requisição para o banco
-    const result = await pool.query(
+    const request = await pool.query(
       "UPDATE requests SET local = $1, description = $2, user = $3, status = $4, statusMessage = $5, image = $6 WHERE id = $7 RETURNING *",
       [local, description, user, status, statusMessage, image, id]
     );
-    if (result.rowCount === 0) {
-      // Resposta de erro em JSON
-      res.json({
-        status: "error",
-        message: `Request with id ${id} not found`,
-      });
-    }
-    // Resposta de sucesso em JSON
-    res.json({
+    // Resposta em JSON
+    return res.status(200).send({
       status: "success",
-      message: `Request with id ${id} updated`,
-      request: result.rows,
+      message: "Request updated",
+      request: request.rows,
     });
-    // Tratamento de erro
-  } catch (error) {
+  } catch (e) {
     // Retorno do erro em console
-    console.error("Error: Updating request ", error);
+    console.error("Error: Updating request ", e);
     // Retorno do erro em JSON
-    res.status(500).send({
+    return res.status(500).send({
       status: "error",
       message: "Error updating request",
     });
   }
-}
+};
 
 // Função para deletar uma requisição
-const deleteRequest = async function (req, res) {
+const deleteRequest = async (req, res) => {
+  /* id por params */
+  const { id } = req.params;
+
   try {
-    // Id por params
-    const { id } = req.params;
-    // Requisição para o banco
-    const result = await pool.query("DELETE FROM requests WHERE id = $1", [id]);
-    if (result.rowCount === 0) {
-      // Resposta de erro em JSON
-      res.json({
-        status: "error",
-        message: `Request with id ${id} not found`,
+    /* coleta requisição */
+    const request = await pool.query("SELECT * FROM requests WHERE id = $1;", [
+      id,
+    ]);
+
+    /* verifica se existe */
+    if (!request) {
+      return res.status(404).send({
+        error: "Request not found",
+      });
+    } else {
+      /* se existir, deleta */
+      await pool.query("DELETE FROM requests WHERE id = $1;", [id]);
+
+      return res.status(200).send({
+        message: "Request deleted",
       });
     }
-    // Resposta de sucesso em JSON
-    res.json({
-      status: "success",
-      message: `Request with id ${id} deleted`,
-    });
-    // Tratamento de erro
-  } catch (error) {
-    // Retorno do erro em console
-    console.error("Error: Deleting request ", error);
-    // Retorno do erro em JSON
-    res.status(500).send({
-      status: "error",
-      message: "Error deleting request",
+  } catch (e) {
+    /* retorno do erro em JSON */
+    return res.status(500).send({
+      error: "Error: " + e,
+      message: "Error in delete request",
     });
   }
-}
+};
 
 module.exports = {
   getAllRequests,
@@ -279,6 +270,5 @@ module.exports = {
   getRequestByUser,
   createRequest,
   updateRequest,
-  deleteRequest
-  
-}
+  deleteRequest,
+};

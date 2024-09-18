@@ -30,7 +30,7 @@ const getAllUsers = async (req, res) => {
 }
 
 const getUsersByName = async (req, res) => {
-    //email por params
+    //name por params
     const { name } = req.params;
     try {
         //requisição para o banco
