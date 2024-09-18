@@ -154,6 +154,7 @@ const createRequest = async (req, res) => {
 
   /* body pra criar elementos */
   const {
+    title,
     image,
     description,
     local,
@@ -163,9 +164,19 @@ const createRequest = async (req, res) => {
     email,
   } = req.body;
 
-
-
   /* verifica se os campos obrigatórios estão preenchidos */
+
+  switch (title) {
+    case typeof title != 'string':
+      errors.push('invalid_name');
+      break;
+    case title.length < 6:
+      errors.push('short_name');
+      break;
+    default:
+      break;
+  }
+
   switch (description) {
     case typeof description !== 'string':
       errors.push('description_type_invalid');
@@ -234,7 +245,7 @@ const createRequest = async (req, res) => {
     try {
       /* requisição para o banco */
       await pool.query(
-        "INSERT INTO requests (image, description, local, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7);",
+        "INSERT INTO requests (image, description, local, status_request, date_request, date_conclusion, email, title) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);",
         [
           image,
           description,
@@ -243,6 +254,7 @@ const createRequest = async (req, res) => {
           date_request,
           dateConclusion,
           email,
+          title
         ]
       );
       /* resposta em JSON */
@@ -270,6 +282,7 @@ const updateRequest = async (req, res) => {
   const { id } = req.params;
   // Body para criar elementos
   const {
+    title,
     image,
     description,
     local,
@@ -280,6 +293,18 @@ const updateRequest = async (req, res) => {
   } = req.body;
 
   // Verifica se os campos obrigatórios estão preenchidos
+
+  switch (title) {
+    case typeof title != 'string':
+      errors.push('invalid_name');
+      break;
+    case title.length < 6:
+      errors.push('short_name');
+      break;
+    default:
+      break;
+  }
+
   switch (description) {
     case typeof description !== 'string':
       errors.push('description_type_invalid');
@@ -345,7 +370,7 @@ const updateRequest = async (req, res) => {
     try {
       // Requisição para o banco
       await pool.query(
-        "UPDATE requests SET image = $1, description = $2, local = $3, status_request = $4, date_request = $5, date_conclusion = $6, email = $7 WHERE id = $8;",
+        "UPDATE requests SET image = $1, description = $2, local = $3, status_request = $4, date_request = $5, date_conclusion = $6, email = $7, name = $9 WHERE id = $8;",
         [
           image,
           description,
@@ -355,6 +380,7 @@ const updateRequest = async (req, res) => {
           dateConclusion,
           email,
           id,
+          title
         ]
       );
       // Resposta em JSON

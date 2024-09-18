@@ -12,6 +12,7 @@ CREATE TABLE users (
 
 CREATE TABLE requests (
   id SERIAL PRIMARY KEY,
+  title VARCHAR(35),
   image VARCHAR(255),
   description TEXT,
   local VARCHAR(255),

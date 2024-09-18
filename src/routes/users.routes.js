@@ -11,8 +11,6 @@ usersRouter.get("/role/:role", usersController.getUserByRole);
 usersRouter.post("/", usersController.createUser);
 usersRouter.put("/:emailAux", usersController.updateUser);
 usersRouter.delete("/:email", usersController.deleteUser);
-
-//toDo
-usersRouter.patch('/'); //updatepassword
+usersRouter.patch('/change/password/:email', usersController.changePassword); 
 
 module.exports = usersRouter;

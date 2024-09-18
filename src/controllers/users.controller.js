@@ -359,4 +359,33 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = { getAllUsers, getUsersByName, getUserByEmail, getUserByRole, createUser, updateUser, deleteUser };
+//função de alterar senha
+const changePassword = async(req, res) => {
+    //email por params
+    const { email } = req.params;
+    const { password } = req.body;
+  
+    const user = (await pool.query('SELECT * FROM users WHERE email=$1;', [email])).rows;
+  //verifica e o usuario existe
+    if(!user) {
+      return res.status(404).send({ message:  'user not found' });
+    } else {
+      await pool.query('UPDATE users SET password=$1 WHERE email=$2;',
+        [password, email]
+      );
+      return res.status(200).send({ message: 'password changed' });
+    }
+  
+  }
+  
+
+module.exports = { 
+    getAllUsers, 
+    getUsersByName, 
+    getUserByEmail, 
+    getUserByRole, 
+    createUser, 
+    updateUser, 
+    deleteUser,
+    changePassword 
+};
