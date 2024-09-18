@@ -1,9 +1,6 @@
 const pool = require('../database/database.config');
-
+const verifyElements = require('../models/verifysFunctions/verifyElements');
 const special = ['!', '@', '#', '$', '%', '&', '*', '(', ')', '/', '?', '|'];
-const verifyElements = (array, type) => {
-    return array.every(element => typeof element === type);
-}
 
 const getAllUsers = async (req, res) => {
     try {
