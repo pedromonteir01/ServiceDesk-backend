@@ -176,6 +176,30 @@ const createRequest = async (req, res) => {
       break;
   }
 
+  let statusRequest;
+  switch (status_request) {
+    case status_request === 'conclued':
+      statusRequest = true;
+      break;
+    case statusRequest === 'inconclued':
+      statusRequest = false;
+    default:
+      errors.push('statusRequest_invalid');
+      break;
+  }
+
+  switch (date_request) {
+    case date_request.length != 10:
+      errors.push('invalid_date_length');
+      break;
+    case typeof date_request != 'object':
+      errors.push('invalid_date_type');
+      break;
+    default:
+      errors.push('date_invalid');
+      break;
+  }
+
   try {
     /* requisição para o banco */
     const request = await pool.query(
@@ -184,7 +208,7 @@ const createRequest = async (req, res) => {
         image,
         description,
         local,
-        status_request,
+        statusRequest,
         date_request,
         date_conclusion,
         email,
@@ -237,6 +261,30 @@ const updateRequest = async (req, res) => {
       break;
   }
 
+  let statusRequest;
+  switch (status_request) {
+    case status_request === 'conclued':
+      statusRequest = true;
+      break;
+    case statusRequest === 'inconclued':
+      statusRequest = false;
+    default:
+      errors.push('statusRequest_invalid');
+      break;
+  }
+
+  switch (date_request) {
+    case date_request.length != 10:
+      errors.push('invalid_date_length');
+      break;
+    case typeof date_request != 'object':
+      errors.push('invalid_date_type');
+      break;
+    default:
+      errors.push('date_invalid');
+      break;
+  }
+
   try {
     // Requisição para o banco
     const request = await pool.query(
@@ -245,7 +293,7 @@ const updateRequest = async (req, res) => {
         image,
         description,
         local,
-        status_request,
+        statusRequest,
         date_request,
         date_conclusion,
         email,
