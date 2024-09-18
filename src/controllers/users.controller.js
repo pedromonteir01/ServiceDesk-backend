@@ -10,7 +10,7 @@ const getAllUsers = async (req, res) => {
         //requisição para o banco
         const users = await pool.query('SELECT * FROM users;');
         //resposta em JSON
-        if(users.rowCount == 0) {
+        if (users.rowCount == 0) {
             return res.status(200).send({
                 message: 'none_users'
             })
@@ -93,7 +93,7 @@ const getUserByRole = async (req, res) => {
     const { role } = req.params;
     let occupation;
 
-    if(role == 'student') {
+    if (role == 'student') {
         occupation = true;
     } else {
         occupation = false;
@@ -186,7 +186,7 @@ const createUser = async (req, res) => {
     }
 
     let role;
-    switch(isStudent) {
+    switch (isStudent) {
         case 'student':
             role = true;
             break;
@@ -287,7 +287,7 @@ const updateUser = async (req, res) => {
     }
 
     let role;
-    switch(isStudent) {
+    switch (isStudent) {
         case 'student':
             role = true;
             break;
@@ -310,12 +310,12 @@ const updateUser = async (req, res) => {
             await pool.query('UPDATE users SET name=$1, email=$2, isAdmin=$3, isStudent=$4 WHERE email=$5;',
                 [name, email, statusAdmin, role, emailAux]
             );
-            
+
             //resposta em JSON
             return res.status(200).send({
                 message: 'updated with success'
             });
-        } catch (e) {            
+        } catch (e) {
             //retorno do erro em JSON
             return res.status(500).send({
                 error: 'Error: ' + e,
@@ -360,32 +360,36 @@ const deleteUser = async (req, res) => {
 }
 
 //função de alterar senha
-const changePassword = async(req, res) => {
+const changePassword = async (req, res) => {
     //email por params
     const { email } = req.params;
     const { password } = req.body;
-  
-    const user = (await pool.query('SELECT * FROM users WHERE email=$1;', [email])).rows;
-  //verifica e o usuario existe
-    if(!user) {
-      return res.status(404).send({ message:  'user not found' });
-    } else {
-      await pool.query('UPDATE users SET password=$1 WHERE email=$2;',
-        [password, email]
-      );
-      return res.status(200).send({ message: 'password changed' });
-    }
-  
-  }
-  
 
-module.exports = { 
-    getAllUsers, 
-    getUsersByName, 
-    getUserByEmail, 
-    getUserByRole, 
-    createUser, 
-    updateUser, 
+    try {
+        const user = (await pool.query('SELECT * FROM users WHERE email=$1;', [email])).rows;
+        //verifica e o usuario existe
+        if (!user) {
+            return res.status(404).send({ message: 'user not found' });
+        } else {
+            await pool.query('UPDATE users SET password=$1 WHERE email=$2;',
+                [password, email]
+            );
+            return res.status(200).send({ message: 'password changed' });
+        }
+    } catch (e) {
+        return res.status(500).send({ error: e, message: 'server error' });
+    }
+
+}
+
+
+module.exports = {
+    getAllUsers,
+    getUsersByName,
+    getUserByEmail,
+    getUserByRole,
+    createUser,
+    updateUser,
     deleteUser,
-    changePassword 
+    changePassword
 };
