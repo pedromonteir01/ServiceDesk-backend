@@ -173,12 +173,29 @@ const createUser = async (req, res) => {
             break;
     }
 
-    if (typeof isAdmin !== 'boolean') {
-        errors.push('invalid_propertie');
+    let statusAdmin;
+    switch (isAdmin) {
+        case isAdmin === 'admin':
+            statusAdmin = true;
+            break;
+        case isAdmin === 'user':
+            statusAdmin = false;
+        default:
+            errors.push('admin_status_invalid');
+            break;
     }
 
-    if (typeof isStudent !== 'boolean') {
-        errors.push('invalid_role');
+    let role;
+    switch(isStudent) {
+        case isStudent === 'student':
+            role = true;
+            break;
+        case isStudent === 'educator':
+            role = false;
+            break;
+        default:
+            errors.push('invalid_role');
+            break;
     }
 
     if (errors.length !== 0) {
@@ -190,7 +207,7 @@ const createUser = async (req, res) => {
         try {
             //requisição para o banco
             await pool.query('INSERT INTO users(name, email, password, isAdmin, isStudent) VALUES($1, $2, $3, $4, $5);',
-                [name, email, password, isAdmin, isStudent]
+                [name, email, password, statusAdmin, role]
             );
             //resposta em JSON
             return res.status(201).send({
@@ -257,12 +274,29 @@ const updateUser = async (req, res) => {
             break;
     }
 
-    if (typeof isAdmin !== 'boolean') {
-        errors.push('invalid_propertie');
+    let statusAdmin;
+    switch (isAdmin) {
+        case isAdmin === 'admin':
+            statusAdmin = true;
+            break;
+        case isAdmin === 'user':
+            statusAdmin = false;
+        default:
+            errors.push('admin_status_invalid');
+            break;
     }
 
-    if (typeof isStudent !== 'boolean') {
-        errors.push('invalid_role');
+    let role;
+    switch(isStudent) {
+        case isStudent === 'student':
+            role = true;
+            break;
+        case isStudent === 'educator':
+            role = false;
+            break;
+        default:
+            errors.push('invalid_role');
+            break;
     }
 
     if (errors.length !== 0) {
@@ -273,14 +307,15 @@ const updateUser = async (req, res) => {
 
         try {
             //requisição para o banco
-            await pool.query('UPDATE users SET name=$1, email=$2, isAdmin=$3, isStudents=$4 WHERE email=$5;',
-                [name, email, password, isAdmin, isStudent, emailAux]
+            await pool.query('UPDATE users SET name=$1, email=$2, isAdmin=$3, isStudent=$4 WHERE email=$5;',
+                [name, email, statusAdmin, role, emailAux]
             );
+            
             //resposta em JSON
             return res.status(200).send({
                 message: 'updated with success'
             });
-        } catch (e) {
+        } catch (e) {            
             //retorno do erro em JSON
             return res.status(500).send({
                 error: 'Error: ' + e,
