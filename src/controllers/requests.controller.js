@@ -1,4 +1,3 @@
-const req = require("express/lib/request");
 const pool = require("../database/database.config");
 
 // Função para pegar todas as requisições
