@@ -175,10 +175,10 @@ const createUser = async (req, res) => {
 
     let statusAdmin;
     switch (isAdmin) {
-        case isAdmin === 'admin':
+        case 'admin':
             statusAdmin = true;
             break;
-        case isAdmin === 'user':
+        case 'user':
             statusAdmin = false;
         default:
             errors.push('admin_status_invalid');
@@ -187,10 +187,10 @@ const createUser = async (req, res) => {
 
     let role;
     switch(isStudent) {
-        case isStudent === 'student':
+        case 'student':
             role = true;
             break;
-        case isStudent === 'educator':
+        case 'educator':
             role = false;
             break;
         default:
@@ -276,10 +276,10 @@ const updateUser = async (req, res) => {
 
     let statusAdmin;
     switch (isAdmin) {
-        case isAdmin === 'admin':
+        case 'admin':
             statusAdmin = true;
             break;
-        case isAdmin === 'user':
+        case 'user':
             statusAdmin = false;
         default:
             errors.push('admin_status_invalid');
@@ -288,10 +288,10 @@ const updateUser = async (req, res) => {
 
     let role;
     switch(isStudent) {
-        case isStudent === 'student':
+        case 'student':
             role = true;
             break;
-        case isStudent === 'educator':
+        case 'educator':
             role = false;
             break;
         default:
