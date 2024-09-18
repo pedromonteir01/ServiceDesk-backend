@@ -12,4 +12,7 @@ usersRouter.post("/", usersController.createUser);
 usersRouter.put("/:emailAux", usersController.updateUser);
 usersRouter.delete("/:email", usersController.deleteUser);
 
+//toDo
+usersRouter.patch('/'); //updatepassword
+
 module.exports = usersRouter;

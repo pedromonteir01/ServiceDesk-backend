@@ -13,4 +13,7 @@ requestsRouter.post('/', requestsController.createRequest);
 requestsRouter.put('/:id', requestsController.updateRequest);
 requestsRouter.delete('/:id', requestsController.deleteRequest);
 
+//toDo
+requestsRouter.patch('/'); //conclusion
+
 module.exports = requestsRouter;
