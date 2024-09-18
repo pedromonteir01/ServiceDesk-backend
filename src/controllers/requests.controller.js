@@ -1,4 +1,3 @@
-const req = require("express/lib/request");
 const pool = require("../database/database.config");
 
 // Função para pegar todas as requisições
@@ -38,8 +37,7 @@ const getRequestById = async (req, res) => {
     /* resposta em json */
     if (request) {
       return res.status(200).send({
-        results: request.rowCount,
-        request: request.rows,
+        request: request.rows[0],
       });
     } else {
       return res.status(404).send({
@@ -69,7 +67,6 @@ const getRequestByLocal = async (req, res) => {
     /* resposta em json */
     if (requests) {
       return res.status(200).send({
-        results: requests.rowCount,
         requests: requests.rows,
       });
     } else {
@@ -167,12 +164,57 @@ const createRequest = async (req, res) => {
   } = req.body;
 
   /* verifica se os campos obrigatórios estão preenchidos */
-  if (!image || !local || !status_request || !email) {
-    /* retorno de erro em JSON */
-    return res.status(400).send({
-      status: "error",
-      message: "Image, Local, Status and Email are required",
-    });
+  switch (description) {
+    case typeof description !== 'string':
+      errors.push('description_type_invalid');
+      break;
+    case description.length < 10:
+      errors.push('short_description');
+      break;
+    default:
+      break;
+  }
+
+  let statusRequest;
+  switch (status_request) {
+    case status_request === 'conclued':
+      statusRequest = true;
+      break;
+    case statusRequest === 'inconclued':
+      statusRequest = false;
+    default:
+      break;
+  }
+
+  switch (date_request) {
+    case date_request.length != 10:
+      errors.push('invalid_date_length');
+      break;
+    case typeof date_request != 'object':
+      errors.push('invalid_date_type');
+      break;
+    default:
+      break;
+  }
+
+  if (!date_conclusion) {
+    date_conclusion = null;
+  } else {
+    errors.push('logic_error');
+  }
+
+  switch (email) {
+    case typeof email !== 'string':
+      errors.push('invalid_email');
+      break;
+    case email.length < 10:
+      errors.push('short_email');
+      break;
+    case !email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br'):
+      errors.push('invalid_domain');
+      break;
+    default:
+      break;
   }
 
   try {
@@ -183,7 +225,7 @@ const createRequest = async (req, res) => {
         image,
         description,
         local,
-        status_request,
+        statusRequest,
         date_request,
         date_conclusion,
         email,
@@ -224,11 +266,57 @@ const updateRequest = async (req, res) => {
   } = req.body;
 
   // Verifica se os campos obrigatórios estão preenchidos
-  if (!image || !local || !status_request || !email) {
-    return res.status(400).send({
-      status: "error",
-      message: "Image, Local, Status and Email are required",
-    });
+  switch (description) {
+    case typeof description !== 'string':
+      errors.push('description_type_invalid');
+      break;
+    case description.length < 10:
+      errors.push('short_description');
+      break;
+    default:
+      break;
+  }
+
+  let statusRequest;
+  switch (status_request) {
+    case status_request === 'conclued':
+      statusRequest = true;
+      break;
+    case statusRequest === 'inconclued':
+      statusRequest = false;
+    default:
+      break;
+  }
+
+  switch (date_request) {
+    case date_request.length != 10:
+      errors.push('invalid_date_length');
+      break;
+    case typeof date_request != 'object':
+      errors.push('invalid_date_type');
+      break;
+    default:
+      break;
+  }
+
+  if (!date_conclusion) {
+    date_conclusion = null;
+  } else {
+    errors.push('logic_error');
+  }
+
+  switch (email) {
+    case typeof email !== 'string':
+      errors.push('invalid_email');
+      break;
+    case email.length < 10:
+      errors.push('short_email');
+      break;
+    case !email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br'):
+      errors.push('invalid_domain');
+      break;
+    default:
+      break;
   }
 
   try {
@@ -239,7 +327,7 @@ const updateRequest = async (req, res) => {
         image,
         description,
         local,
-        status_request,
+        statusRequest,
         date_request,
         date_conclusion,
         email,
@@ -260,7 +348,7 @@ const updateRequest = async (req, res) => {
       status: "error",
       message: "Error updating request",
     });
-  } 
+  }
 };
 
 // Função para deletar uma requisição
