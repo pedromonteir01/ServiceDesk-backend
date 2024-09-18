@@ -163,6 +163,8 @@ const createRequest = async (req, res) => {
     email,
   } = req.body;
 
+
+
   /* verifica se os campos obrigatórios estão preenchidos */
   switch (description) {
     case typeof description !== 'string':
@@ -177,17 +179,19 @@ const createRequest = async (req, res) => {
 
   let statusRequest;
   switch (status_request) {
-    case status_request === 'conclued':
+    case 'conclued':
       statusRequest = true;
       break;
-    case statusRequest === 'inconclued':
+    case 'inconclued':
       statusRequest = false;
+      break;
     default:
+      errors.push('invalid_status');
       break;
   }
 
   switch (date_request) {
-    case date_request.length != 10:
+    case JSON.stringify(date_request).length != 10:
       errors.push('invalid_date_length');
       break;
     case typeof date_request != 'object':
@@ -197,8 +201,9 @@ const createRequest = async (req, res) => {
       break;
   }
 
+  let dateConclusion;
   if (!date_conclusion) {
-    date_conclusion = null;
+    dateConclusion = null;
   } else {
     errors.push('logic_error');
   }
@@ -217,34 +222,44 @@ const createRequest = async (req, res) => {
       break;
   }
 
-  try {
-    /* requisição para o banco */
-    const request = await pool.query(
-      "INSERT INTO requests (image, description, local, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-      [
-        image,
-        description,
-        local,
-        statusRequest,
-        date_request,
-        date_conclusion,
-        email,
-      ]
-    );
-    /* resposta em JSON */
-    return res.status(201).send({
-      status: "success",
-      message: "Request created",
-      request: request.rows,
+
+  if (errors.length !== 0) {
+    return res.status(400).send({
+      errors: errors
     });
-  } catch (e) {
-    /* retorno do erro em console */
-    console.error("Error: Creating request ", e);
-    /* retorno do erro em JSON */
-    return res.status(500).send({
-      status: "error",
-      message: "Error creating request",
-    });
+  } else {
+
+
+
+    try {
+      /* requisição para o banco */
+      const request = await pool.query(
+        "INSERT INTO requests (image, description, local, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+        [
+          image,
+          description,
+          local,
+          statusRequest,
+          date_request,
+          dateConclusion,
+          email,
+        ]
+      );
+      /* resposta em JSON */
+      return res.status(201).send({
+        status: "success",
+        message: "Request created",
+        request: request.rows,
+      });
+    } catch (e) {
+      /* retorno do erro em console */
+      console.error("Error: Creating request ", e);
+      /* retorno do erro em JSON */
+      return res.status(500).send({
+        status: "error",
+        message: "Error creating request",
+      });
+    }
   }
 };
 
@@ -279,17 +294,19 @@ const updateRequest = async (req, res) => {
 
   let statusRequest;
   switch (status_request) {
-    case status_request === 'conclued':
+    case 'conclued':
       statusRequest = true;
       break;
-    case statusRequest === 'inconclued':
+    case 'inconclued':
       statusRequest = false;
+      break;
     default:
+      errors.push('invalid_status');
       break;
   }
 
   switch (date_request) {
-    case date_request.length != 10:
+    case JSON.stringify(date_request).length != 10:
       errors.push('invalid_date_length');
       break;
     case typeof date_request != 'object':
@@ -299,8 +316,9 @@ const updateRequest = async (req, res) => {
       break;
   }
 
+  let dateConclusion;
   if (!date_conclusion) {
-    date_conclusion = null;
+    dateConclusion = null;
   } else {
     errors.push('logic_error');
   }
@@ -319,35 +337,42 @@ const updateRequest = async (req, res) => {
       break;
   }
 
-  try {
-    // Requisição para o banco
-    const request = await pool.query(
-      "UPDATE requests SET image = $1, description = $2, local = $3, status_request = $4, date_request = $5, date_conclusion = $6, email = $7 WHERE id = $8 RETURNING *",
-      [
-        image,
-        description,
-        local,
-        statusRequest,
-        date_request,
-        date_conclusion,
-        email,
-        id,
-      ]
-    );
-    // Resposta em JSON
-    return res.status(200).send({
-      status: "success",
-      message: "Request updated",
-      request: request.rows,
+  if (errors.length !== 0) {
+    return res.status(400).send({
+      errors: errors
     });
-  } catch (e) {
-    // Retorno do erro em console
-    console.error("Error: Updating request ", e);
-    // Retorno do erro em JSON
-    return res.status(500).send({
-      status: "error",
-      message: "Error updating request",
-    });
+  } else {
+
+    try {
+      // Requisição para o banco
+      const request = await pool.query(
+        "UPDATE requests SET image = $1, description = $2, local = $3, status_request = $4, date_request = $5, date_conclusion = $6, email = $7 WHERE id = $8 RETURNING *",
+        [
+          image,
+          description,
+          local,
+          statusRequest,
+          date_request,
+          dateConclusion,
+          email,
+          id,
+        ]
+      );
+      // Resposta em JSON
+      return res.status(200).send({
+        status: "success",
+        message: "Request updated",
+        request: request.rows,
+      });
+    } catch (e) {
+      // Retorno do erro em console
+      console.error("Error: Updating request ", e);
+      // Retorno do erro em JSON
+      return res.status(500).send({
+        status: "error",
+        message: "Error updating request",
+      });
+    }
   }
 };
 
