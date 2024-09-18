@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const requestsController = require('../controllers/requestcontroller');
+const requestsController = require('../controllers/requests.controller');
 //inicializa a rota
 const requestsRouter = Router();
 
