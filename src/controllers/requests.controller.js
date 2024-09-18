@@ -200,6 +200,12 @@ const createRequest = async (req, res) => {
       break;
   }
 
+  if(!date_conclusion) {
+    date_conclusion = null;
+  } else {
+    errors.push('logic_error');
+  }
+
   try {
     /* requisição para o banco */
     const request = await pool.query(
@@ -283,6 +289,12 @@ const updateRequest = async (req, res) => {
     default:
       errors.push('date_invalid');
       break;
+  }
+
+  if(!date_conclusion) {
+    date_conclusion = null;
+  } else {
+    errors.push('logic_error');
   }
 
   try {
