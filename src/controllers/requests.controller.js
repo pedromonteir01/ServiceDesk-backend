@@ -156,21 +156,38 @@ const createRequest = async (req, res) => {
   let errors = [];
 
   /* body pra criar elementos */
-  const { local, description, user, status, statusMessage, image } = req.body;
+  const {
+    image,
+    description,
+    local,
+    status_request,
+    date_request,
+    date_conclusion,
+    email,
+  } = req.body;
 
-  if (!local || !image) {
+  /* verifica se os campos obrigatórios estão preenchidos */
+  if (!image || !local || !status_request || !email) {
     /* retorno de erro em JSON */
     return res.status(400).send({
       status: "error",
-      message: "Local and Image are required",
+      message: "Image, Local, Status and Email are required",
     });
   }
 
   try {
     /* requisição para o banco */
     const request = await pool.query(
-      "INSERT INTO requests (local, description, user, status, statusMessage, image) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [local, description, user, status, statusMessage, image]
+      "INSERT INTO requests (image, description, local, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [
+        image,
+        description,
+        local,
+        status_request,
+        date_request,
+        date_conclusion,
+        email,
+      ]
     );
     /* resposta em JSON */
     return res.status(201).send({
@@ -196,21 +213,38 @@ const updateRequest = async (req, res) => {
   // Id por params
   const { id } = req.params;
   // Body para criar elementos
-  const { local, description, user, status, statusMessage, image } = req.body;
+  const {
+    image,
+    description,
+    local,
+    status_request,
+    date_request,
+    date_conclusion,
+    email,
+  } = req.body;
 
-  if (!local || !image) {
-    // Retorno de erro em JSON
+  // Verifica se os campos obrigatórios estão preenchidos
+  if (!image || !local || !status_request || !email) {
     return res.status(400).send({
       status: "error",
-      message: "Local and Image are required",
+      message: "Image, Local, Status and Email are required",
     });
   }
 
   try {
     // Requisição para o banco
     const request = await pool.query(
-      "UPDATE requests SET local = $1, description = $2, user = $3, status = $4, statusMessage = $5, image = $6 WHERE id = $7 RETURNING *",
-      [local, description, user, status, statusMessage, image, id]
+      "UPDATE requests SET image = $1, description = $2, local = $3, status_request = $4, date_request = $5, date_conclusion = $6, email = $7 WHERE id = $8 RETURNING *",
+      [
+        image,
+        description,
+        local,
+        status_request,
+        date_request,
+        date_conclusion,
+        email,
+        id,
+      ]
     );
     // Resposta em JSON
     return res.status(200).send({
@@ -226,7 +260,7 @@ const updateRequest = async (req, res) => {
       status: "error",
       message: "Error updating request",
     });
-  }
+  } 
 };
 
 // Função para deletar uma requisição
