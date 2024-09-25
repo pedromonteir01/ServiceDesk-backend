@@ -66,9 +66,7 @@ const getUserByEmail = async (req, res) => {
         );
         //resposta em JSON
         if (user) {
-            return res.status(200).send({
-                user: user.rows[0]
-            });
+            return res.status(200).send(user.rows[0]);
         } else {
             return res.status(404).send({
                 error: 404,
