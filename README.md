@@ -58,45 +58,100 @@ Para funcionamento total do projeto contamos com o uso de bibliotecas que facili
 - Gera Tokens para login de usuários
 
 
-# Documentação das Rotas da API
+# Documentação das Rotas da API - Service Desk
 
-Este projeto contém rotas para gerenciar usuários e solicitações em uma API construída com o framework **Express.js**.
+Este projeto consiste em uma API para gerenciar usuários e solicitações de manutenção de monumentos escolares quebrados, desenvolvida com **Express.js**. Usuários podem criar contas, enviar fotos e descrever problemas encontrados nos monumentos.
 
 ## Estrutura de Rotas
 
-### 1. **Rotas de Request (`request.routes.js`)**
+### 1. **Rotas de Solicitação (`request.routes.js`)**
 
-As rotas de solicitações são simples e usadas para responder a requisições HTTP feitas ao endpoint `/request`.
+As rotas de solicitação permitem o envio e gerenciamento de reportes de monumentos quebrados na escola.
 
 #### Endpoints:
 
 - **GET `/request/`** 
-  - **Descrição**: Responde com a mensagem "Request route".
+  - **Descrição**: Retorna uma lista de todas as solicitações de manutenção cadastradas.
+  - **Exemplo de Resposta**: 
+    ```json
+    [
+      {
+        "id": 1,
+        "monument": "Estátua do Fundador",
+        "description": "Braço direito quebrado",
+        "imageUrl": "http://example.com/imagem1.jpg",
+        "status": "Pendente"
+      },
+      ...
+    ]
+    ```
+
+- **POST `/request`**
+  - **Descrição**: Cria uma nova solicitação de manutenção com base nas informações fornecidas pelo usuário, incluindo uma imagem do monumento quebrado.
+  - **Dados de Exemplo (Body)**: 
+    ```json
+    {
+      "monument": "Estátua do Fundador",
+      "description": "Braço direito quebrado",
+      "imageUrl": "http://example.com/imagem1.jpg"
+    }
+    ```
   - **Exemplo de Resposta**: 
     ```json
     {
-      "message": "Request route"
+      "message": "Solicitação criada com sucesso!",
+      "id": 1
     }
     ```
 
+- **PUT `/request/:id`**
+  - **Descrição**: Atualiza o status de uma solicitação existente (por exemplo, de "Pendente" para "Em andamento" ou "Concluído").
+  - **Parâmetro de URL**: `id` - O ID da solicitação a ser atualizada.
+  - **Dados de Exemplo (Body)**:
+    ```json
+    {
+      "status": "Em andamento"
+    }
+    ```
+
+- **DELETE `/request/:id`**
+  - **Descrição**: Exclui uma solicitação específica baseada no seu ID.
+  - **Parâmetro de URL**: `id` - O ID da solicitação.
+
 #### Exemplo de Uso:
 
-Realizando uma requisição GET para `/request/`:
+- Criar uma nova solicitação (POST):
+ 
+  ```bash
+  curl -X POST http://localhost:<PORT>/request \
+    -H "Content-Type: application/json" \
+    -d '{"monument": "Estátua do Fundador", "description": "Braço direito quebrado", "imageUrl": "http://example.com/imagem1.jpg"}'
+  ```
 
-```bash
-curl http://localhost:<PORT>/request
-```
+- Atualizar o status de uma solicitação (PUT):
+ 
+  ```bash
+  curl -X PUT http://localhost:<PORT>/request/1 \
+    -H "Content-Type: application/json" \
+    -d '{"status": "Concluído"}'
+  ```
+
+- Excluir uma solicitação (DELETE):
+
+  ```bash
+  curl -X DELETE http://localhost:<PORT>/request/1
+  ```
 
 ---
 
 ### 2. **Rotas de Usuário (`user.routes.js`)**
 
-As rotas de usuário gerenciam a criação, leitura, atualização e exclusão de usuários na API. Estas rotas estão vinculadas a um controlador (`usersController`) que contém a lógica necessária para cada operação.
+As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuários na plataforma, permitindo que cada usuário crie uma conta e gerencie suas solicitações.
 
 #### Endpoints:
 
-- **GET `/user`** 
-  - **Descrição**: Retorna todos os usuários do sistema. 
+- **GET `/user`**
+  - **Descrição**: Retorna todos os usuários cadastrados.
   - **Exemplo de Resposta**: 
     ```json
     [
@@ -109,56 +164,59 @@ As rotas de usuário gerenciam a criação, leitura, atualização e exclusão d
     ```
 
 - **POST `/user`** 
-  - **Descrição**: Cria um novo usuário com base nos dados fornecidos no corpo da requisição. 
+  - **Descrição**: Cria um novo usuário.
   - **Dados de Exemplo (Body)**: 
     ```json
     {
       "name": "John Doe",
-      "email": "johndoe@example.com"
+      "email": "johndoe@example.com",
+      "password": "senhaSegura123"
+    }
+    ```
+  - **Exemplo de Resposta**:
+    ```json
+    {
+      "message": "Usuário criado com sucesso!"
     }
     ```
 
-- **PUT `/user/:email`** 
-  - **Descrição**: Atualiza as informações de um usuário existente identificado por seu email. 
-  - **Parâmetro de URL**: `email` - o email do usuário a ser atualizado.
-  - **Dados de Exemplo (Body)**: 
+- **PUT `/user/:email`**
+  - **Descrição**: Atualiza as informações de um usuário baseado em seu email.
+  - **Parâmetro de URL**: `email` - O email do usuário a ser atualizado.
+  - **Dados de Exemplo (Body)**:
     ```json
     {
       "name": "Jane Doe"
     }
     ```
 
-- **GET `/user/:name`** 
-  - **Descrição**: Retorna os detalhes de um usuário específico baseado em seu nome. 
-  - **Parâmetro de URL**: `name` - o nome do usuário.
+- **GET `/user/:email`**
+  - **Descrição**: Retorna os detalhes de um usuário específico.
+  - **Parâmetro de URL**: `email` - O email do usuário.
 
-- **GET `/user/:email`** 
-  - **Descrição**: Retorna os detalhes de um usuário específico baseado em seu email. 
-  - **Parâmetro de URL**: `email` - o email do usuário.
-
-- **DELETE `/user/:email`** 
-  - **Descrição**: Exclui um usuário específico baseado em seu email. 
-  - **Parâmetro de URL**: `email` - o email do usuário.
+- **DELETE `/user/:email`**
+  - **Descrição**: Exclui um usuário baseado em seu email.
+  - **Parâmetro de URL**: `email` - O email do usuário.
 
 #### Exemplo de Uso:
 
 - Criar um novo usuário (POST):
- 
+
   ```bash
   curl -X POST http://localhost:<PORT>/user \
     -H "Content-Type: application/json" \
-    -d '{"name": "John Doe", "email": "johndoe@example.com"}'
+    -d '{"name": "John Doe", "email": "johndoe@example.com", "password": "senhaSegura123"}'
   ```
 
 - Atualizar um usuário existente (PUT):
- 
+
   ```bash
   curl -X PUT http://localhost:<PORT>/user/johndoe@example.com \
     -H "Content-Type: application/json" \
     -d '{"name": "Jane Doe"}'
   ```
 
-- Obter um usuário por email (GET):
+- Obter detalhes de um usuário por email (GET):
 
   ```bash
   curl http://localhost:<PORT>/user/johndoe@example.com
@@ -174,5 +232,6 @@ As rotas de usuário gerenciam a criação, leitura, atualização e exclusão d
 
 ### Observações
 
-- Certifique-se de que o servidor Express está em execução para poder realizar as requisições HTTP.
-- Substitua `<PORT>` pela porta na qual o servidor está configurado para rodar.
+- Certifique-se de que o servidor Express está em execução para realizar as requisições.
+- Substitua `<PORT>` pela porta onde o servidor está rodando.
+- As rotas de `request` podem incluir a URL de uma imagem enviada pelo usuário para relatar o problema no monumento.
