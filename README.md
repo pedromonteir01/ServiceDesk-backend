@@ -77,10 +77,14 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
     [
       {
         "id": 1,
-        "patrimonio": "Ventilador",
+        "title": "Ventilador",
+        "image": "http://example.com/imagem1.jpg",
         "description": "Grade pendurada",
-        "imageUrl": "http://example.com/imagem1.jpg",
-        "status": "Pendente"
+        "local": "Biblioteca",
+        "status_request": "Em andamento",
+        "date_request": "04/08/2024",
+        "date_conclusion": "null",
+        "email": "johndoe@example.com" 
       },
       ...
     ]
@@ -91,9 +95,10 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
   - **Dados de Exemplo (Body)**: 
     ```json
     {
-      "patrimonio": "Ventilador",
+      "title": "Ventilador",
+      "image": "http://example.com/imagem1.jpg",
       "description": "Grade pendurada",
-      "imageUrl": "http://example.com/imagem1.jpg"
+      "local": "Biblioteca"
     }
     ```
   - **Exemplo de Resposta**: 
@@ -125,7 +130,7 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
   ```bash
   curl -X POST http://localhost:<PORT>/request \
     -H "Content-Type: application/json" \
-    -d '{"patrimonio": "Ventilador", "description": "Grade pendurada", "imageUrl": "http://example.com/imagem1.jpg"}'
+    -d '{"title": "Ventilador", "image": "http://example.com/imagem1.jpg", "description": "Grade pendurada", "local": "Biblioteca"}'
   ```
 
 - Atualizar o status de uma solicitação (PUT):
@@ -157,7 +162,10 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
     [
       {
         "name": "John Doe",
-        "email": "johndoe@example.com"
+        "email": "johndoe@example.com",
+        "password": "senhaSegura123",
+        "isAdmin": "False",
+        "isStudent": "True"
       },
       ...
     ]
@@ -170,7 +178,9 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
     {
       "nome": "John Doe",
       "email": "johndoe@example.com",
-      "password": "senhaSegura123"
+      "password": "senhaSegura123",
+      "isAdmin": "False",
+      "isStudent": "True"
     }
     ```
   - **Exemplo de Resposta**:
@@ -205,7 +215,7 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
   ```bash
   curl -X POST http://localhost:<PORT>/user \
     -H "Content-Type: application/json" \
-    -d '{"nome": "John Doe", "email": "johndoe@example.com", "password": "senhaSegura123"}'
+    -d '{"nome": "John Doe", "email": "johndoe@example.com", "password": "senhaSegura123", "isAdmin": "False", "isStudent": "True"}'
   ```
 
 - Atualizar um usuário existente (PUT):
