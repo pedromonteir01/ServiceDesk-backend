@@ -124,7 +124,7 @@ const createUser = async (req, res) => {
     let errors = [];
 
     //body para criar elementos
-    const { name, email, password, isAdmin, isStudent } = req.body;
+    const { name, email, password, isAdmin, isStudent } = req.body;    
 
     switch (name) {
         case typeof name !== 'string':
@@ -175,6 +175,7 @@ const createUser = async (req, res) => {
             break;
         case 'user':
             statusAdmin = false;
+            break;
         default:
             errors.push('admin_status_invalid');
             break;
