@@ -60,7 +60,7 @@ Para funcionamento total do projeto contamos com o uso de bibliotecas que facili
 
 # Documentação das Rotas da API - Service Desk
 
-Este projeto consiste em uma API para gerenciar usuários e solicitações de manutenção de monumentos escolares quebrados, desenvolvida com **Express.js**. Usuários podem criar contas, enviar fotos e descrever problemas encontrados nos monumentos.
+Este projeto consiste em uma API para gerenciar usuários e solicitações de manutenção de patrimônios escolar quebrados, desenvolvida com **Express.js**. Usuários podem criar contas, enviar fotos e descrever problemas encontrados na rede SENAI.
 
 ## Estrutura de Rotas
 
@@ -77,8 +77,8 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
     [
       {
         "id": 1,
-        "monument": "Estátua do Fundador",
-        "description": "Braço direito quebrado",
+        "patrimonio": "Ventilador",
+        "description": "Grade pendurada",
         "imageUrl": "http://example.com/imagem1.jpg",
         "status": "Pendente"
       },
@@ -91,26 +91,26 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
   - **Dados de Exemplo (Body)**: 
     ```json
     {
-      "monument": "Estátua do Fundador",
-      "description": "Braço direito quebrado",
+      "patrimonio": "Ventilador",
+      "description": "Grade pendurada",
       "imageUrl": "http://example.com/imagem1.jpg"
     }
     ```
   - **Exemplo de Resposta**: 
     ```json
     {
-      "message": "Solicitação criada com sucesso!",
+      "message": "Requisição criada com sucesso!",
       "id": 1
     }
     ```
 
 - **PUT `/request/:id`**
-  - **Descrição**: Atualiza o status de uma solicitação existente (por exemplo, de "Pendente" para "Em andamento" ou "Concluído").
+  - **Descrição**: Atualiza o status de uma solicitação existente (por exemplo, de "Em andamento" para "Concluído").
   - **Parâmetro de URL**: `id` - O ID da solicitação a ser atualizada.
   - **Dados de Exemplo (Body)**:
     ```json
     {
-      "status": "Em andamento"
+      "status": "Concluído"
     }
     ```
 
@@ -125,7 +125,7 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
   ```bash
   curl -X POST http://localhost:<PORT>/request \
     -H "Content-Type: application/json" \
-    -d '{"monument": "Estátua do Fundador", "description": "Braço direito quebrado", "imageUrl": "http://example.com/imagem1.jpg"}'
+    -d '{"patrimonio": "Ventilador", "description": "Grade pendurada", "imageUrl": "http://example.com/imagem1.jpg"}'
   ```
 
 - Atualizar o status de uma solicitação (PUT):
@@ -146,7 +146,7 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
 
 ### 2. **Rotas de Usuário (`user.routes.js`)**
 
-As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuários na plataforma, permitindo que cada usuário crie uma conta e gerencie suas solicitações.
+As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuários na plataforma, permitindo que cada usuário crie uma conta e gerencie apenas as suas solicitações.
 
 #### Endpoints:
 
@@ -168,7 +168,7 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
   - **Dados de Exemplo (Body)**: 
     ```json
     {
-      "name": "John Doe",
+      "nome": "John Doe",
       "email": "johndoe@example.com",
       "password": "senhaSegura123"
     }
@@ -176,7 +176,7 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
   - **Exemplo de Resposta**:
     ```json
     {
-      "message": "Usuário criado com sucesso!"
+      "message": "Usuário registrado!"
     }
     ```
 
@@ -205,7 +205,7 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
   ```bash
   curl -X POST http://localhost:<PORT>/user \
     -H "Content-Type: application/json" \
-    -d '{"name": "John Doe", "email": "johndoe@example.com", "password": "senhaSegura123"}'
+    -d '{"nome": "John Doe", "email": "johndoe@example.com", "password": "senhaSegura123"}'
   ```
 
 - Atualizar um usuário existente (PUT):
@@ -213,7 +213,7 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
   ```bash
   curl -X PUT http://localhost:<PORT>/user/johndoe@example.com \
     -H "Content-Type: application/json" \
-    -d '{"name": "Jane Doe"}'
+    -d '{"nome": "Jane Doe"}'
   ```
 
 - Obter detalhes de um usuário por email (GET):
