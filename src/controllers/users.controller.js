@@ -1,5 +1,5 @@
 const pool = require('../database/database.config');
-const verifyElements = require('../models/verifysFunctions/verifyElements');
+const { verifyElements, verifyEmail } = require('../models/verifysFunctions/verifyElements');
 const special = ['!', '@', '#', '$', '%', '&', '*', '(', ')', '/', '?', '|'];
 
 const getAllUsers = async (req, res) => {
@@ -136,16 +136,13 @@ const createUser = async (req, res) => {
         errors.push('email_inválido');
     } else if (email.length < 10) {
         errors.push('email_inválido');
-    } else if (!email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br')) {
+    } else if (!verifyEmail(email, '@sp.senai.br') || !verifyEmail(email, '@aluno.senai.br')) {
         errors.push('domínio_inválido');
     }
 
+
     if (password.length < 8) {
         errors.push('senha_deve_ter_8_no_mínimo_caracteres');
-    } else if (!verifyElements(password.split(''), 'string')) {
-        errors.push('senha_deve_conter_números');
-    } else if (!verifyElements(password.split(''), 'number')) {
-        errors.push('senha_deve_conter_números');
     } else if (password.split('').includes(special)) {
         errors.push('senha_deve_ter_caracteres_especiais');
     }
@@ -218,16 +215,12 @@ const updateUser = async (req, res) => {
         errors.push('email_inválido');
     } else if (email.length < 10) {
         errors.push('email_inválido');
-    } else if (!email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br')) {
+    } else if (!verifyEmail(email, '@sp.senai.br') || !verifyEmail(email, '@aluno.senai.br')) {
         errors.push('domínio_inválido');
     }
 
     if (password.length < 8) {
         errors.push('senha_deve_ter_8_no_mínimo_caracteres');
-    } else if (!verifyElements(password.split(''), 'string')) {
-        errors.push('senha_deve_conter_números');
-    } else if (!verifyElements(password.split(''), 'number')) {
-        errors.push('senha_deve_conter_números');
     } else if (password.split('').includes(special)) {
         errors.push('senha_deve_ter_caracteres_especiais');
     }
@@ -334,10 +327,6 @@ const changePassword = async (req, res) => {
 
             if (password.length < 8) {
                 errors.push('senha_deve_ter_8_no_mínimo_caracteres');
-            } else if (!verifyElements(password.split(''), 'string')) {
-                errors.push('senha_deve_conter_números');
-            } else if (!verifyElements(password.split(''), 'number')) {
-                errors.push('senha_deve_conter_números');
             } else if (password.split('').includes(special)) {
                 errors.push('senha_deve_ter_caracteres_especiais');
             } else if(password == user.password) {
