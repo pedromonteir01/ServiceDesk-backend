@@ -1,5 +1,5 @@
 const pool = require('../database/database.config');
-const verifyElements = require('../models/verifysFunctions/verifyElements');
+const { verifyElements, verifyEmail } = require('../models/verifysFunctions/verifyElements');
 const special = ['!', '@', '#', '$', '%', '&', '*', '(', ')', '/', '?', '|'];
 
 const getAllUsers = async (req, res) => {
@@ -124,48 +124,27 @@ const createUser = async (req, res) => {
     let errors = [];
 
     //body para criar elementos
-    const { name, email, password, isAdmin, isStudent } = req.body;    
+    const { name, email, password, isAdmin, isStudent } = req.body;
 
-    switch (name) {
-        case typeof name !== 'string':
-            errors.push('invalid_name');
-            break;
-        case name.length < 3:
-            errors.push('short_name');
-            break;
-        default:
-            break;
+    if (typeof name !== 'string') {
+        errors.push('nome_inválido');
+    } else if (name.length < 3) {
+        errors.push('nome_curto_demais');
     }
 
-    switch (email) {
-        case typeof email !== 'string':
-            errors.push('invalid_email');
-            break;
-        case email.length < 10:
-            errors.push('short_email');
-            break;
-        case !email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br'):
-            errors.push('invalid_domain');
-            break;
-        default:
-            break;
+    if (typeof email !== 'string') {
+        errors.push('email_inválido');
+    } else if (email.length < 10) {
+        errors.push('email_inválido');
+    } else if (!verifyEmail(email, 'sp.senai.br') || !verifyEmail(email, 'aluno.senai.br')) {
+        errors.push('domínio_inválido');
     }
 
-    switch (password) {
-        case password.length < 8:
-            errors.push('short_password');
-            break;
-        case !verifyElements(password.split(''), 'string'):
-            errors.push('must_contain_numbers');
-            break;
-        case !verifyElements(password.split(''), 'number'):
-            errors.push('must_contain_numbers');
-            break;
-        case password.split('').includes(special):
-            errors.push('must_contain_special_characters');
-            break;
-        default:
-            break;
+
+    if (password.length < 8) {
+        errors.push('senha_deve_ter_8_no_mínimo_caracteres');
+    } else if (password.split('').includes(special)) {
+        errors.push('senha_deve_ter_caracteres_especiais');
     }
 
     let statusAdmin;
@@ -177,7 +156,7 @@ const createUser = async (req, res) => {
             statusAdmin = false;
             break;
         default:
-            errors.push('admin_status_invalid');
+            errors.push('status_inválido');
             break;
     }
 
@@ -190,14 +169,12 @@ const createUser = async (req, res) => {
             role = false;
             break;
         default:
-            errors.push('invalid_role');
+            errors.push('cargo_inválido');
             break;
     }
 
     if (errors.length !== 0) {
-        return res.status(400).send({
-            errors: errors
-        });
+        return res.status(400).send({errors});
     } else {
 
         try {
@@ -211,7 +188,7 @@ const createUser = async (req, res) => {
             });
         } catch (e) {
             //retorno do erro em JSON
-            return res.status(500).send({
+            return res.status(500).json({
                 error: 'Error: ' + e,
                 message: 'Error in post user'
             });
@@ -228,46 +205,24 @@ const updateUser = async (req, res) => {
     //body para criar elementos
     const { name, email, password, isAdmin, isStudent } = req.body;
 
-    switch (name) {
-        case typeof name !== 'string':
-            errors.push('invalid_name');
-            break;
-        case name.length < 3:
-            errors.push('short_name');
-            break;
-        default:
-            break;
+    if (typeof name !== 'string') {
+        errors.push('nome_inválido');
+    } else if (name.length < 3) {
+        errors.push('nome_curto_demais');
     }
 
-    switch (email) {
-        case typeof email !== 'string':
-            errors.push('invalid_email');
-            break;
-        case email.length < 10:
-            errors.push('short_email');
-            break;
-        case !email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br'):
-            errors.push('invalid_domain');
-            break;
-        default:
-            break;
+    if (typeof email !== 'string') {
+        errors.push('email_inválido');
+    } else if (email.length < 10) {
+        errors.push('email_inválido');
+    } else if (!verifyEmail(email, 'sp.senai.br') || !verifyEmail(email, 'aluno.senai.br')) {
+        errors.push('domínio_inválido');
     }
 
-    switch (password) {
-        case password.length < 8:
-            errors.push('short_password');
-            break;
-        case !verifyElements(password.split(''), 'string'):
-            errors.push('must_contain_numbers');
-            break;
-        case !verifyElements(password.split(''), 'number'):
-            errors.push('must_contain_numbers');
-            break;
-        case password.split('').includes(special):
-            errors.push('must_contain_special_characters');
-            break;
-        default:
-            break;
+    if (password.length < 8) {
+        errors.push('senha_deve_ter_8_no_mínimo_caracteres');
+    } else if (password.split('').includes(special)) {
+        errors.push('senha_deve_ter_caracteres_especiais');
     }
 
     let statusAdmin;
@@ -278,7 +233,7 @@ const updateUser = async (req, res) => {
         case 'user':
             statusAdmin = false;
         default:
-            errors.push('admin_status_invalid');
+            errors.push('status_inválido');
             break;
     }
 
@@ -291,7 +246,7 @@ const updateUser = async (req, res) => {
             role = false;
             break;
         default:
-            errors.push('invalid_role');
+            errors.push('cargo_inválido');
             break;
     }
 
@@ -357,6 +312,8 @@ const deleteUser = async (req, res) => {
 
 //função de alterar senha
 const changePassword = async (req, res) => {
+    let errors = [];
+
     //email por params
     const { email } = req.params;
     const { password } = req.body;
@@ -367,6 +324,15 @@ const changePassword = async (req, res) => {
         if (!user) {
             return res.status(404).send({ message: 'user not found' });
         } else {
+
+            if (password.length < 8) {
+                errors.push('senha_deve_ter_8_no_mínimo_caracteres');
+            } else if (password.split('').includes(special)) {
+                errors.push('senha_deve_ter_caracteres_especiais');
+            } else if(password == user.password) {
+                errors.push('same_password');
+            }
+
             await pool.query('UPDATE users SET password=$1 WHERE email=$2;',
                 [password, email]
             );
