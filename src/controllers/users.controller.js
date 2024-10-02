@@ -1,5 +1,5 @@
 const pool = require('../database/database.config');
-const { verifyElements, verifyEmail } = require('../models/verifysFunctions/verifyElements');
+const { verifyEmail } = require('../models/verifysFunctions/verifyElements');
 const special = ['!', '@', '#', '$', '%', '&', '*', '(', ')', '/', '?', '|'];
 
 const getAllUsers = async (req, res) => {
@@ -136,7 +136,7 @@ const createUser = async (req, res) => {
         errors.push('email_inválido');
     } else if (email.length < 10) {
         errors.push('email_inválido');
-    } else if (!verifyEmail(email, 'sp.senai.br') || !verifyEmail(email, 'aluno.senai.br')) {
+    } else if (!verifyEmail(email, 'sp.senai.br') && !verifyEmail(email, 'aluno.senai.br')) {
         errors.push('domínio_inválido');
     }
 
