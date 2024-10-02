@@ -127,27 +127,27 @@ const createUser = async (req, res) => {
     const { name, email, password, isAdmin, isStudent } = req.body;
 
     if (typeof name !== 'string') {
-        errors.push('invalid_name');
+        errors.push('nome_inválido');
     } else if (name.length < 3) {
-        errors.push('short_name');
+        errors.push('nome_curto_demais');
     }
 
     if (typeof email !== 'string') {
-        errors.push('invalid_email');
+        errors.push('email_inválido');
     } else if (email.length < 10) {
-        errors.push('short_email');
+        errors.push('email_inválido');
     } else if (!email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br')) {
-        errors.push('invalid_domain');
+        errors.push('domínio_inválido');
     }
 
     if (password.length < 8) {
-        errors.push('short_password');
+        errors.push('senha_deve_ter_8_no_mínimo_caracteres');
     } else if (!verifyElements(password.split(''), 'string')) {
-        errors.push('must_contain_numbers');
+        errors.push('senha_deve_conter_números');
     } else if (!verifyElements(password.split(''), 'number')) {
-        errors.push('must_contain_numbers');
+        errors.push('senha_deve_conter_números');
     } else if (password.split('').includes(special)) {
-        errors.push('must_contain_special_characters');
+        errors.push('senha_deve_ter_caracteres_especiais');
     }
 
     let statusAdmin;
@@ -159,7 +159,7 @@ const createUser = async (req, res) => {
             statusAdmin = false;
             break;
         default:
-            errors.push('admin_status_invalid');
+            errors.push('status_inválido');
             break;
     }
 
@@ -172,14 +172,12 @@ const createUser = async (req, res) => {
             role = false;
             break;
         default:
-            errors.push('invalid_role');
+            errors.push('cargo_inválido');
             break;
     }
 
     if (errors.length !== 0) {
-        return res.status(400).send({
-            errors: errors
-        });
+        return res.status(400).send({errors});
     } else {
 
         try {
@@ -193,7 +191,7 @@ const createUser = async (req, res) => {
             });
         } catch (e) {
             //retorno do erro em JSON
-            return res.status(500).send({
+            return res.status(500).json({
                 error: 'Error: ' + e,
                 message: 'Error in post user'
             });
@@ -211,27 +209,27 @@ const updateUser = async (req, res) => {
     const { name, email, password, isAdmin, isStudent } = req.body;
 
     if (typeof name !== 'string') {
-        errors.push('invalid_name');
+        errors.push('nome_inválido');
     } else if (name.length < 3) {
-        errors.push('short_name');
+        errors.push('nome_curto_demais');
     }
 
     if (typeof email !== 'string') {
-        errors.push('invalid_email');
+        errors.push('email_inválido');
     } else if (email.length < 10) {
-        errors.push('short_email');
+        errors.push('email_inválido');
     } else if (!email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br')) {
-        errors.push('invalid_domain');
+        errors.push('domínio_inválido');
     }
 
     if (password.length < 8) {
-        errors.push('short_password');
+        errors.push('senha_deve_ter_8_no_mínimo_caracteres');
     } else if (!verifyElements(password.split(''), 'string')) {
-        errors.push('must_contain_numbers');
+        errors.push('senha_deve_conter_números');
     } else if (!verifyElements(password.split(''), 'number')) {
-        errors.push('must_contain_numbers');
+        errors.push('senha_deve_conter_números');
     } else if (password.split('').includes(special)) {
-        errors.push('must_contain_special_characters');
+        errors.push('senha_deve_ter_caracteres_especiais');
     }
 
     let statusAdmin;
@@ -242,7 +240,7 @@ const updateUser = async (req, res) => {
         case 'user':
             statusAdmin = false;
         default:
-            errors.push('admin_status_invalid');
+            errors.push('status_inválido');
             break;
     }
 
@@ -255,7 +253,7 @@ const updateUser = async (req, res) => {
             role = false;
             break;
         default:
-            errors.push('invalid_role');
+            errors.push('cargo_inválido');
             break;
     }
 
@@ -335,13 +333,13 @@ const changePassword = async (req, res) => {
         } else {
 
             if (password.length < 8) {
-                errors.push('short_password');
+                errors.push('senha_deve_ter_8_no_mínimo_caracteres');
             } else if (!verifyElements(password.split(''), 'string')) {
-                errors.push('must_contain_numbers');
+                errors.push('senha_deve_conter_números');
             } else if (!verifyElements(password.split(''), 'number')) {
-                errors.push('must_contain_numbers');
+                errors.push('senha_deve_conter_números');
             } else if (password.split('').includes(special)) {
-                errors.push('must_contain_special_characters');
+                errors.push('senha_deve_ter_caracteres_especiais');
             } else if(password == user.password) {
                 errors.push('same_password');
             }
