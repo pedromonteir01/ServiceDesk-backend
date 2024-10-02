@@ -124,48 +124,30 @@ const createUser = async (req, res) => {
     let errors = [];
 
     //body para criar elementos
-    const { name, email, password, isAdmin, isStudent } = req.body;    
+    const { name, email, password, isAdmin, isStudent } = req.body;
 
-    switch (name) {
-        case typeof name !== 'string':
-            errors.push('invalid_name');
-            break;
-        case name.length < 3:
-            errors.push('short_name');
-            break;
-        default:
-            break;
+    if (typeof name !== 'string') {
+        errors.push('invalid_name');
+    } else if (name.length < 3) {
+        errors.push('short_name');
     }
 
-    switch (email) {
-        case typeof email !== 'string':
-            errors.push('invalid_email');
-            break;
-        case email.length < 10:
-            errors.push('short_email');
-            break;
-        case !email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br'):
-            errors.push('invalid_domain');
-            break;
-        default:
-            break;
+    if (typeof email !== 'string') {
+        errors.push('invalid_email');
+    } else if (email.length < 10) {
+        errors.push('short_email');
+    } else if (!email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br')) {
+        errors.push('invalid_domain');
     }
 
-    switch (password) {
-        case password.length < 8:
-            errors.push('short_password');
-            break;
-        case !verifyElements(password.split(''), 'string'):
-            errors.push('must_contain_numbers');
-            break;
-        case !verifyElements(password.split(''), 'number'):
-            errors.push('must_contain_numbers');
-            break;
-        case password.split('').includes(special):
-            errors.push('must_contain_special_characters');
-            break;
-        default:
-            break;
+    if (password.length < 8) {
+        errors.push('short_password');
+    } else if (!verifyElements(password.split(''), 'string')) {
+        errors.push('must_contain_numbers');
+    } else if (!verifyElements(password.split(''), 'number')) {
+        errors.push('must_contain_numbers');
+    } else if (password.split('').includes(special)) {
+        errors.push('must_contain_special_characters');
     }
 
     let statusAdmin;
@@ -228,46 +210,28 @@ const updateUser = async (req, res) => {
     //body para criar elementos
     const { name, email, password, isAdmin, isStudent } = req.body;
 
-    switch (name) {
-        case typeof name !== 'string':
-            errors.push('invalid_name');
-            break;
-        case name.length < 3:
-            errors.push('short_name');
-            break;
-        default:
-            break;
+    if (typeof name !== 'string') {
+        errors.push('invalid_name');
+    } else if (name.length < 3) {
+        errors.push('short_name');
     }
 
-    switch (email) {
-        case typeof email !== 'string':
-            errors.push('invalid_email');
-            break;
-        case email.length < 10:
-            errors.push('short_email');
-            break;
-        case !email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br'):
-            errors.push('invalid_domain');
-            break;
-        default:
-            break;
+    if (typeof email !== 'string') {
+        errors.push('invalid_email');
+    } else if (email.length < 10) {
+        errors.push('short_email');
+    } else if (!email.includes('@') || !email.includes('sp.senai.br') || !email.includes('aluno.senai.br')) {
+        errors.push('invalid_domain');
     }
 
-    switch (password) {
-        case password.length < 8:
-            errors.push('short_password');
-            break;
-        case !verifyElements(password.split(''), 'string'):
-            errors.push('must_contain_numbers');
-            break;
-        case !verifyElements(password.split(''), 'number'):
-            errors.push('must_contain_numbers');
-            break;
-        case password.split('').includes(special):
-            errors.push('must_contain_special_characters');
-            break;
-        default:
-            break;
+    if (password.length < 8) {
+        errors.push('short_password');
+    } else if (!verifyElements(password.split(''), 'string')) {
+        errors.push('must_contain_numbers');
+    } else if (!verifyElements(password.split(''), 'number')) {
+        errors.push('must_contain_numbers');
+    } else if (password.split('').includes(special)) {
+        errors.push('must_contain_special_characters');
     }
 
     let statusAdmin;
@@ -357,6 +321,8 @@ const deleteUser = async (req, res) => {
 
 //função de alterar senha
 const changePassword = async (req, res) => {
+    let errors = [];
+
     //email por params
     const { email } = req.params;
     const { password } = req.body;
@@ -367,6 +333,19 @@ const changePassword = async (req, res) => {
         if (!user) {
             return res.status(404).send({ message: 'user not found' });
         } else {
+
+            if (password.length < 8) {
+                errors.push('short_password');
+            } else if (!verifyElements(password.split(''), 'string')) {
+                errors.push('must_contain_numbers');
+            } else if (!verifyElements(password.split(''), 'number')) {
+                errors.push('must_contain_numbers');
+            } else if (password.split('').includes(special)) {
+                errors.push('must_contain_special_characters');
+            } else if(password == user.password) {
+                errors.push('same_password');
+            }
+
             await pool.query('UPDATE users SET password=$1 WHERE email=$2;',
                 [password, email]
             );
