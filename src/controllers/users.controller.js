@@ -136,7 +136,7 @@ const createUser = async (req, res) => {
         errors.push('email_inválido');
     } else if (email.length < 10) {
         errors.push('email_inválido');
-    } else if (!verifyEmail(email, '@sp.senai.br') || !verifyEmail(email, '@aluno.senai.br')) {
+    } else if (!verifyEmail(email, 'sp.senai.br') || !verifyEmail(email, 'aluno.senai.br')) {
         errors.push('domínio_inválido');
     }
 
@@ -215,7 +215,7 @@ const updateUser = async (req, res) => {
         errors.push('email_inválido');
     } else if (email.length < 10) {
         errors.push('email_inválido');
-    } else if (!verifyEmail(email, '@sp.senai.br') || !verifyEmail(email, '@aluno.senai.br')) {
+    } else if (!verifyEmail(email, 'sp.senai.br') || !verifyEmail(email, 'aluno.senai.br')) {
         errors.push('domínio_inválido');
     }
 
