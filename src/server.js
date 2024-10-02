@@ -10,6 +10,7 @@ const app = express(); // Cria o servidor e armazena na variável app
 const port = process.env.PORT || 5000; // Pega a porta do arquivo .env ou usa a porta 5000
 
 app.use(cors()); // Configura o servidor para aceitar requisições de outros domínios
+app.use(express.json()); // Configura o servidor para receber requisições com o formato JSON
 app.use("/", indexRoutes); // Configura o servidor para usar as rotas
 
 app.use((req, res, next) => {
@@ -19,7 +20,6 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Headers",
     "X-PINGOTHER ,Content-Type , Authorization"
   );
-  app.use(express.json()); // Configura o servidor para receber requisições com o formato JSON
 });
 
 app.post("/upload-image", uploadUser.single("image"), async (req, res) => {
