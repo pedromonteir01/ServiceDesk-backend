@@ -107,7 +107,7 @@ const getRequestByStatus = async (req, res) => {
         message: "Requests not found with this status: " + status,
       });
     }
-  } catch (e) {
+    } catch (e) {
     /* retorno do erro em json */
     return res.status(500).send({
       error: "Error: " + e,
