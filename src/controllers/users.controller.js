@@ -174,6 +174,13 @@ const createUser = async (req, res) => {
       break;
   }
 
+  const user = (await pool.query('SELECT * FROM users WHERE email=$1', [email])).rows[0];
+  
+  if(user) {
+    return res.status(400).send({ message: 'usuário com este email já está cadastrado' });
+  }
+  
+
   if (errors.length !== 0) {
     return res.status(400).send({ errors });
   } else {
@@ -191,7 +198,7 @@ const createUser = async (req, res) => {
     } catch (e) {
       //retorno do erro em JSON
       return res.status(500).json({
-        error: "Error: " + e,
+        error: e,
         message: "Error in post user",
       });
     }
