@@ -1,5 +1,6 @@
 const pool = require("../database/database.config");
 const { verifyEmail } = require("../models/verifysFunctions/verifyElements");
+const bcrypt = require('bcryptjs');
 const special = ["!", "@", "#", "$", "%", "&", "*", "(", ")", "/", "?", "|"];
 
 const getAllUsers = async (req, res) => {
@@ -177,10 +178,11 @@ const createUser = async (req, res) => {
     return res.status(400).send({ errors });
   } else {
     try {
+      const hash = await bcrypt.hash(password, 10); 
       //requisição para o banco
       await pool.query(
         "INSERT INTO users(name, email, password, isAdmin, isStudent) VALUES($1, $2, $3, $4, $5);",
-        [name, email, password, statusAdmin, role]
+        [name, email, hash, statusAdmin, role]
       );
       //resposta em JSON
       return res.status(201).send({
