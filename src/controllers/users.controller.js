@@ -10,7 +10,7 @@ const getAllUsers = async (req, res) => {
     //resposta em JSON
     if (users.rowCount == 0) {
       return res.status(200).send({
-        message: "none_users",
+        success: "none_users",
       });
     } else {
       return res.status(200).send({
@@ -22,7 +22,7 @@ const getAllUsers = async (req, res) => {
     //retorno do erro em JSON
     return res.status(500).send({
       error: "Error: " + e,
-      message: "Error in get all users",
+      error: "Error in get all users",
     });
   }
 };
@@ -44,14 +44,14 @@ const getUsersByName = async (req, res) => {
     } else {
       return res.status(404).send({
         error: 404,
-        message: "Users not found with this name: " + name,
+        error: "Users not found with this name: " + name,
       });
     }
   } catch (e) {
     //retorno do erro em JSON
     return res.status(500).send({
       error: "Error: " + e,
-      message: "Error in get user: " + email,
+      error: "Error in get user: " + email,
     });
   }
 };
@@ -70,14 +70,14 @@ const getUserByEmail = async (req, res) => {
     } else {
       return res.status(404).send({
         error: 404,
-        message: "User not found: " + email,
+        error: "User not found: " + email,
       });
     }
   } catch (e) {
     //retorno do erro em JSON
     return res.status(500).send({
       error: "Error: " + e,
-      message: "Error in get user: " + email,
+      error: "Error in get user: " + email,
     });
   }
 };
@@ -106,14 +106,14 @@ const getUserByRole = async (req, res) => {
     } else {
       return res.status(404).send({
         error: 404,
-        message: "Users not found",
+        error: "Users not found",
       });
     }
   } catch (e) {
     //retorno do erro em JSON
     return res.status(500).send({
       error: "Error: " + e,
-      message: "Error in get user: " + email,
+      error: "Error in get user: " + email,
     });
   }
 };
@@ -177,7 +177,7 @@ const createUser = async (req, res) => {
   const user = (await pool.query('SELECT * FROM users WHERE email=$1', [email])).rows[0];
   
   if(user) {
-    return res.status(400).send({ message: 'usuário com este email já está cadastrado' });
+    return res.status(400).send({ error: 'usuário com este email já está cadastrado' });
   }
   
 
@@ -193,13 +193,13 @@ const createUser = async (req, res) => {
       );
       //resposta em JSON
       return res.status(201).send({
-        message: "registered with success",
+        success: "registered with success",
       });
     } catch (e) {
       //retorno do erro em JSON
       return res.status(500).json({
         error: e,
-        message: "Error in post user",
+        error: "Error in post user",
       });
     }
   }
@@ -276,13 +276,13 @@ const updateUser = async (req, res) => {
 
       //resposta em JSON
       return res.status(200).send({
-        message: "updated with success",
+        success: "updated with success",
       });
     } catch (e) {
       //retorno do erro em JSON
       return res.status(500).send({
         error: "Error: " + e,
-        message: "Error in post user",
+        error: "Error in post user",
       });
     }
   }
@@ -308,14 +308,14 @@ const deleteUser = async (req, res) => {
       await pool.query("DELETE FROM users WHERE email=$1;", [email]);
 
       return res.status(200).send({
-        message: "user deleted",
+        success: "user deleted",
       });
     }
   } catch (e) {
     //retorno do erro em JSON
     return res.status(500).send({
       error: "Error: " + e,
-      message: "Error in delete user",
+      error: "Error in delete user",
     });
   }
 };
@@ -334,7 +334,7 @@ const changePassword = async (req, res) => {
     ).rows;
     //verifica e o usuario existe
     if (!user) {
-      return res.status(404).send({ message: "user not found" });
+      return res.status(404).send({ error: "user not found" });
     } else {
       if (password.length < 8) {
         errors.push("senha_deve_ter_8_no_mínimo_caracteres");
@@ -348,10 +348,10 @@ const changePassword = async (req, res) => {
         password,
         email,
       ]);
-      return res.status(200).send({ message: "password changed" });
+      return res.status(200).send({ success: "password changed" });
     }
   } catch (e) {
-    return res.status(500).send({ error: e, message: "server error" });
+    return res.status(500).send({ error: e, error: "server error" });
   }
 };
 
