@@ -1,4 +1,3 @@
-const { log } = require("console");
 const pool = require("../database/database.config");
 const { verifyEmail } = require("../models/verifysFunctions/verifyElements");
 const bcrypt = require('bcryptjs');

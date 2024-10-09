@@ -23,3 +23,9 @@ CREATE TABLE requests (
   date_conclusion DATE,
   email VARCHAR(255) REFERENCES users(email)
 );
+
+CREATE TABLE refreshToken (
+  token VARCHAR(255) PRIMARY KEY,
+  expires INT,
+  email VARCHAR(255) REFERENCES users(email)
+);
