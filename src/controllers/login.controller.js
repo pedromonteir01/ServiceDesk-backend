@@ -22,8 +22,6 @@ const login = async(req, res) => {
             expiresIn: 604800
         });
 
-
-
         return res.status(200).send({ user: user, token: token });
     } catch(e) {
         return res.status(500).send({ error: e });

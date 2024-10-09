@@ -1,6 +1,8 @@
+const { log } = require("console");
 const pool = require("../database/database.config");
 const { verifyEmail } = require("../models/verifysFunctions/verifyElements");
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const special = ["!", "@", "#", "$", "%", "&", "*", "(", ")", "/", "?", "|"];
 
 const getAllUsers = async (req, res) => {
@@ -324,15 +326,21 @@ const deleteUser = async (req, res) => {
 const changePassword = async (req, res) => {
   let errors = [];
 
+  console.log('tests');
+  
   //email por params
   const { email } = req.params;
   const { password } = req.body;
+  console.log(email, password);
+  
 
   try {
     const user = (
       await pool.query("SELECT * FROM users WHERE email=$1;", [email])
-    ).rows;
-    //verifica e o usuario existe
+    ).rows[0];
+    console.log(user);
+    
+    //verifica se o usuario existe
     if (!user) {
       return res.status(404).send({ error: "user not found" });
     } else {
@@ -344,10 +352,22 @@ const changePassword = async (req, res) => {
         errors.push("same_password");
       }
 
-      await pool.query("UPDATE users SET password=$1 WHERE email=$2;", [
-        password,
-        email,
+      const token = crypto.randomBytes(20).toString('hex');
+
+      const now = new Date();
+      now.setHours(now.getHours() + 1);
+
+      if(now > user.passwordResetExpires) return res.status(401).send({ error: 'token expired' });
+
+      await pool.query("UPDATE users SET passwordResetToken=$1, passwordResetExpires=$2 WHERE email=$3;", [
+        token,
+        now,
+        email
       ]);
+
+      console.log(token, now);
+      
+
       return res.status(200).send({ success: "password changed" });
     }
   } catch (e) {

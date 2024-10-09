@@ -7,7 +7,9 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL,
   name VARCHAR(255) NOT NULL,
   isAdmin BOOLEAN NOT NULL,
-  isStudent BOOLEAN NOT NULL
+  isStudent BOOLEAN NOT NULL,
+  passwordResetToken VARCHAR(255),
+  passwordResetExpires TIMESTAMP
 );
 
 CREATE TABLE requests (

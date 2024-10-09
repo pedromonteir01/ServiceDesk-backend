@@ -4,7 +4,7 @@ const cors = require("cors"); // O cors serve para permitir requisições de out
 const indexRoutes = require("./routes/index.routes"); // Importa as rotas
 const { Query } = require("pg");
 const { populate } = require("dotenv");
-const uploadUser = require("./../middlewares/uploadimage"); // Importa o middleware de upload de imagem
+const uploadUser = require("./middlewares/uploadimage"); // Importa o middleware de upload de imagem
 
 const app = express(); // Cria o servidor e armazena na variável app
 const port = process.env.PORT || 5000; // Pega a porta do arquivo .env ou usa a porta 5000
