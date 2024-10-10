@@ -160,8 +160,8 @@ const createRequest = async (req, res) => {
 
   let dateConclusion = date_conclusion || null;
 
-  const emailRegex = /^[\w-\.]+@(sp\.senai\.br|aluno\.senai\.br|docente\.senai\.br)$/;
-  if (!emailRegex.test(email)) errors.push("invalid_email");
+  /* const emailRegex = /^[\w-\.]+@(sp\.senai\.br|aluno\.senai\.br|docente\.senai\.br)$/;
+  if (!emailRegex.test(email)) errors.push("invalid_email"); */
 
   if (errors.length !== 0) {
     return res.status(400).send({
