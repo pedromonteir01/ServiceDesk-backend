@@ -31,7 +31,16 @@ const login = async (req, res) => {
         const accessToken = generateAccessToken({ email: user.email, isAdmin: user.isadmin });
         const refreshToken = generateRefreshToken({ email: user.email });
 
-        await pool.query('INSERT INTO refreshToken (token, expires, email) VALUES ($1, $2, $3)', [refreshToken, 604800, email]);
+        // Verifica se já existe um refresh token para este usuário
+        const existingToken = (await pool.query('SELECT * FROM refreshToken WHERE email=$1', [email])).rows[0];
+
+        if (existingToken) {
+            // Atualiza o token existente
+            await pool.query('UPDATE refreshToken SET token=$1, expires=$2 WHERE email=$3', [refreshToken, 604800, email]);
+        } else {
+            // Insere um novo token se não existir
+            await pool.query('INSERT INTO refreshToken (token, expires, email) VALUES ($1, $2, $3)', [refreshToken, 604800, email]);
+        }
 
         return res.status(200).send({
             user: user,
