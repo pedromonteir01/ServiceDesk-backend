@@ -21,11 +21,11 @@ const login = async (req, res) => {
 
         const user = (await pool.query('SELECT * FROM users WHERE email=$1', [email])).rows[0];
         if (!user) {
-            return res.status(400).send({ error: 'Usuário não encontrado' });
+            return res.status(400).send({ error: 'credenciais inválidas' });
         }
 
         if (!await bcrypt.compare(password, user.password)) {
-            return res.status(400).send({ message: 'Senha incorreta' });
+            return res.status(400).send({ error: 'credenciais inválidas' });
         }
 
         const accessToken = generateAccessToken({ email: user.email, isAdmin: user.isadmin });
@@ -69,8 +69,8 @@ const refresh = async (req, res) => {
         jwt.verify(refreshToken, authConfig, (err, user) => {
             if (err) return res.status(403).send({ error: 'Token inválido' });
 
-            const newAccessToken = generateAccessToken({ email: user.email, isAdmin: user.isAdmin });
-            return res.status(200).send({ accessToken: newAccessToken });
+            const newAccessToken = generateAccessToken({ email: user.email });
+            return res.status(200).send({ accessToken: newAccessToken, refreshToken: refreshToken });
         });
     } catch (e) {
         return res.status(500).send({ error: 'Erro no servidor', details: e.message });
