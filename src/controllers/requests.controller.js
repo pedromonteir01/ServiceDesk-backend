@@ -133,7 +133,6 @@ const createRequest = async (req, res) => {
   let errors = [];
   const {
     title,
-    image,
     description,
     local,
     status_request,
@@ -160,15 +159,15 @@ const createRequest = async (req, res) => {
 
   let dateConclusion = date_conclusion || null;
 
-  /* const emailRegex = /^[\w-\.]+@(sp\.senai\.br|aluno\.senai\.br|docente\.senai\.br)$/;
-  if (!emailRegex.test(email)) errors.push("invalid_email"); */
-
   if (errors.length !== 0) {
     return res.status(400).send({
       errors: errors,
     });
   } else {
     try {
+      // O multer armazena o arquivo da imagem como req.file
+      const image = req.file ? req.file.filename : null;
+
       await pool.query(
         "INSERT INTO requests (image, description, local, status_request, date_request, date_conclusion, email, title) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);",
         [
@@ -195,6 +194,7 @@ const createRequest = async (req, res) => {
     }
   }
 };
+
 
 // Função para atualizar uma requisição
 const updateRequest = async (req, res) => {
