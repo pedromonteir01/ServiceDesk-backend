@@ -6,6 +6,9 @@ const loginRouter = require('./login.routes');
 
 //rotas da aplicação
 const router = Router();
+router.get('/', (req, res) => {
+    res.send('Em execução');
+    });
 router.use('/users', usersRouter);
 router.use('/requests', requestsRouter);
 router.use('/data', dataRouter);
