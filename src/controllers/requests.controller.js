@@ -195,6 +195,16 @@ const createRequest = async (req, res) => {
   }
 };
 
+//Criar um request para teste 
+// {
+//   "title": "Teste",
+//   "description": "Teste",
+//   "local": "Teste",
+//   "status_request": "conclued",
+//   "date_request": "2021-10-10",
+//   "date_conclusion": "2021-10-10",
+//   "email": ""
+// }
 
 // Função para atualizar uma requisição
 const updateRequest = async (req, res) => {
