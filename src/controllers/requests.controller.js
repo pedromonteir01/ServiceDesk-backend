@@ -304,6 +304,33 @@ const deleteRequest = async (req, res) => {
   }
 };
 
+// Função para filtrar requisições por título
+const filterRequestsByTitle = async (req, res) => {
+  const { title } = req.params;
+  try {
+    const requests = await pool.query(
+      "SELECT * FROM requests WHERE title LIKE $1;",
+      [`%${title.toLowerCase()}%`]
+    );
+    if (requests.rowCount > 0) {
+      return res.status(200).send({
+        results: requests.rowCount,
+        requests: requests.rows,
+      });
+    } else {
+      return res.status(404).send({
+        error: 404,
+        message: "Requests not found with this title: " + title,
+      });
+    }
+  } catch (e) {
+    return res.status(500).send({
+      error: "Error: " + e,
+      message: "Error in get requests by title: " + title,
+    });
+  }
+};
+
 // Função para concluir uma requisição
 const concludeStatus = async (req, res) => {
   const { id } = req.params;
@@ -334,5 +361,6 @@ module.exports = {
   createRequest,
   updateRequest,
   deleteRequest,
+  filterRequestsByTitle,
   concludeStatus,
 };
