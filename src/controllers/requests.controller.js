@@ -178,7 +178,7 @@ const createRequest = async (req, res) => {
           date_request,
           dateConclusion,
           email,
-          title,
+          title.toLowerCase(),
         ]
       );
       return res.status(201).send({
@@ -308,6 +308,7 @@ const deleteRequest = async (req, res) => {
 const filterRequestsByTitle = async (req, res) => {
   const { title } = req.params;
   try {
+    // Filtra as requisições que contém o título é necessário que o title seja convertido para minúsculo
     const requests = await pool.query(
       "SELECT * FROM requests WHERE title LIKE $1;",
       [`%${title.toLowerCase()}%`]
