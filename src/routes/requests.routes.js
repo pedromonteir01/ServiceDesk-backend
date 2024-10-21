@@ -13,6 +13,7 @@ requestsRouter.get('/user/:user', requestsController.getRequestByUser);
 requestsRouter.post('/', upload.single('image'), requestsController.createRequest);
 requestsRouter.put('/:id', requestsController.updateRequest);
 requestsRouter.delete('/:id', requestsController.deleteRequest);
+requestsRouter.get('/title/:title', requestsController.filterRequestsByTitle);
 requestsRouter.patch('/status/:id', requestsController.concludeStatus); 
 
 module.exports = requestsRouter;
