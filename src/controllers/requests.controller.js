@@ -18,7 +18,6 @@ const getAllRequests = async (req, res) => {
   } catch (e) {
     return res.status(500).send({
       error: "Error: " + e,
-      message: "Error in get all requests",
     });
   }
 };
@@ -32,7 +31,6 @@ const getLocaisInstalacao = (req, res) => {
   } catch (e) {
     return res.status(500).send({
       error: "Error: " + e,
-      message: "Error in get locais de instalação",
     });
   }
 };
@@ -121,7 +119,6 @@ const getRequestByStatus = async (req, res) => {
   } catch (e) {
     return res.status(500).send({
       error: "Error: " + e,
-      message: "Error in get requests by status: " + status,
     });
   }
 };
