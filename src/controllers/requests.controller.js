@@ -1,4 +1,5 @@
 const pool = require("../database/database.config");
+const locaisUnicos = require("../models/locals/locals");
 
 // Função para pegar todas as requisições
 const getAllRequests = async (req, res) => {
@@ -18,6 +19,20 @@ const getAllRequests = async (req, res) => {
     return res.status(500).send({
       error: "Error: " + e,
       message: "Error in get all requests",
+    });
+  }
+};
+
+const getLocaisInstalacao = (req, res) => {
+  try {
+    return res.status(200).send({
+      results: locaisUnicos.length,
+      locais: locaisUnicos,
+    });
+  } catch (e) {
+    return res.status(500).send({
+      error: "Error: " + e,
+      message: "Error in get locais de instalação",
     });
   }
 };
@@ -152,7 +167,8 @@ const createRequest = async (req, res) => {
   } = req.body;
 
   if (!title || title.length < 6) errors.push("invalid_or_short_name");
-  if (!description || description.length < 10) errors.push("invalid_or_short_description");
+  if (!description || description.length < 10)
+    errors.push("invalid_or_short_description");
 
   let statusRequest;
   switch (status_request) {
@@ -205,7 +221,7 @@ const createRequest = async (req, res) => {
   }
 };
 
-//Criar um request para teste 
+//Criar um request para teste
 // {
 //   "title": "Teste",
 //   "description": "Teste",
@@ -233,7 +249,8 @@ const updateRequest = async (req, res) => {
   } = req.body;
 
   if (!title || title.length < 6) errors.push("invalid_or_short_name");
-  if (!description || description.length < 10) errors.push("invalid_or_short_description");
+  if (!description || description.length < 10)
+    errors.push("invalid_or_short_description");
 
   let statusRequest;
   switch (status_request) {
@@ -250,7 +267,8 @@ const updateRequest = async (req, res) => {
 
   let dateConclusion = date_conclusion || null;
 
-  const emailRegex = /^[\w-\.]+@(sp\.senai\.br|aluno\.senai\.br|docente\.senai\.br)$/;
+  const emailRegex =
+    /^[\w-\.]+@(sp\.senai\.br|aluno\.senai\.br|docente\.senai\.br)$/;
   if (!emailRegex.test(email)) errors.push("invalid_email");
 
   if (errors.length !== 0) {
@@ -364,6 +382,7 @@ const concludeStatus = async (req, res) => {
 
 module.exports = {
   getAllRequests,
+  getLocaisInstalacao,
   getRequestById,
   getRequestByLocal,
   getRequestByStatus,
