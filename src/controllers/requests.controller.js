@@ -77,10 +77,20 @@ const getRequestByLocal = async (req, res) => {
 const getRequestByStatus = async (req, res) => {
   const { status } = req.params;
 
+  let value;
+  switch (status) {
+    case 'conclued':
+      value = true;
+      break;
+    default:
+      value = false;
+      break;
+  }
+
   try {
     const requests = await pool.query(
       "SELECT * FROM requests WHERE status_request = $1;",
-      [status]
+      [value]
     );
     if (requests.rowCount > 0) {
       return res.status(200).send({
@@ -90,7 +100,7 @@ const getRequestByStatus = async (req, res) => {
     } else {
       return res.status(404).send({
         error: 404,
-        message: "Requests not found with this status: " + status,
+        message: "Requisições não encontradas",
       });
     }
   } catch (e) {
@@ -320,8 +330,7 @@ const filterRequestsByTitle = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        error: 404,
-        message: "Requests not found with this title: " + title,
+        error: '404, Requests not found'
       });
     }
   } catch (e) {
