@@ -1,5 +1,5 @@
 const pool = require("../database/database.config");
-const locaisInstalacao = require("../models/locals/locals");
+const locaisUnicos = require("../models/locals/locals");
 
 // Função para pegar todas as requisições
 const getAllRequests = async (req, res) => {
@@ -26,8 +26,8 @@ const getAllRequests = async (req, res) => {
 const getLocaisInstalacao = (req, res) => {
   try {
     return res.status(200).send({
-      results: locaisInstalacao.length,
-      locais: locaisInstalacao,
+      results: locaisUnicos.length,
+      locais: locaisUnicos,
     });
   } catch (e) {
     return res.status(500).send({
