@@ -108,14 +108,18 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
   - **Exemplo de Resposta**: 
     ```json
     {
-      "message": "Requisição criada com sucesso!",
+      "nome": "John Doe",
+       "email": "johndoe@example.com",
+       "password": "senhaSegura123",
+        "isAdmin": "False",
+        "isStudent": "True"
     }
     ```
 
 - **PUT `/request/:id`**
   - **Descrição**: Atualiza o status de uma solicitação existente (por exemplo, de "Em andamento" para "Concluído").
   - **Parâmetro de URL**: `id` - O ID da solicitação a ser atualizada.
-  - **Dados de Exemplo (Body)**:
+  - **Dados de Exemplo (parameter)**:
     ```json
     {
       "status": "Concluído"
