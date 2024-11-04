@@ -8,7 +8,7 @@ requestsRouter.get("/locais", requestsController.getLocaisInstalacao);
 requestsRouter.get("/:id", requestsController.getRequestById);
 requestsRouter.get("/local/:local", requestsController.getRequestByLocal);
 requestsRouter.get("/status/:status", requestsController.getRequestByStatus);
-requestsRouter.get("/user/:user", requestsController.getRequestByUser);
+requestsRouter.get("/user/:email", requestsController.getRequestByUser);
 requestsRouter.post("/", requestsController.createRequest);
 requestsRouter.put("/:id", requestsController.updateRequest);
 requestsRouter.delete("/:id", requestsController.deleteRequest);

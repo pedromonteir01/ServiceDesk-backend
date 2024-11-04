@@ -17,7 +17,7 @@ const getAllRequests = async (req, res) => {
     }
   } catch (e) {
     return res.status(500).send({
-      error: "Error: " + e,
+      error: "Error de servidor",
     });
   }
 };
@@ -30,7 +30,7 @@ const getLocaisInstalacao = (req, res) => {
     });
   } catch (e) {
     return res.status(500).send({
-      error: "Error: " + e,
+      error: "Erro de servidor"
     });
   }
 };
@@ -48,14 +48,12 @@ const getRequestById = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        error: 404,
-        message: "Request not found with this id: " + id,
+        message: "Não existe requisição com este id"
       });
     }
   } catch (e) {
     return res.status(500).send({
-      error: "Error: " + e,
-      message: "Error in get request: " + id,
+      error: "Erro de servidor"
     });
   }
 };
@@ -74,14 +72,12 @@ const getRequestByLocal = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        error: 404,
-        message: "Requests not found with this local: " + local,
+        message: "Não há requisições com este local"
       });
     }
   } catch (e) {
     return res.status(500).send({
-      error: "Error: " + e,
-      message: "Error in get requests by local: " + local,
+      error: "Erro de servidor"
     });
   }
 };
@@ -90,20 +86,25 @@ const getRequestByLocal = async (req, res) => {
 const getRequestByStatus = async (req, res) => {
   const { status } = req.params;
 
-  let value;
-  switch (status) {
-    case 'conclued':
-      value = true;
+  let statusRequest;
+  switch (status.toLowerCase()) {
+    case "conclued":
+      statusRequest = 'concluída';
       break;
+    case "awaiting":
+      statusRequest = 'em andamento';
+      break;
+    case "inconclued" :
+      statusRequest = 'aguardando'
     default:
-      value = false;
+      errors.push("invalid_status");
       break;
   }
 
   try {
     const requests = await pool.query(
       "SELECT * FROM requests WHERE status_request = $1;",
-      [value]
+      [statusRequest]
     );
     if (requests.rowCount > 0) {
       return res.status(200).send({
@@ -112,40 +113,34 @@ const getRequestByStatus = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        error: 404,
         message: "Requisições não encontradas",
       });
     }
   } catch (e) {
     return res.status(500).send({
-      error: "Error: " + e,
+      error: "Erro de servidor",
     });
   }
 };
 
 // Função para pegar uma requisição por usuário
 const getRequestByUser = async (req, res) => {
-  const { user } = req.params;
+  const { email } = req.params;
   try {
     const requests = await pool.query(
       "SELECT * FROM requests WHERE user = $1;",
-      [user]
+      [email]
     );
     if (requests.rowCount > 0) {
-      return res.status(200).send({
-        results: requests.rowCount,
-        requests: requests.rows,
-      });
+      return res.status(200).send(requests.rows[0]);
     } else {
       return res.status(404).send({
-        error: 404,
-        message: "Requests not found with this user: " + user,
+        message: "Este usuário não fez requisições"
       });
     }
   } catch (e) {
     return res.status(500).send({
-      error: "Error: " + e,
-      message: "Error in get requests by user: " + user,
+      error: "Error de servidor"
     });
   }
 };
@@ -168,13 +163,15 @@ const createRequest = async (req, res) => {
     errors.push("invalid_or_short_description");
 
   let statusRequest;
-  switch (status_request) {
+  switch (status_request.toLowerCase()) {
     case "conclued":
-      statusRequest = true;
+      statusRequest = 'concluída';
       break;
-    case "inconclued":
-      statusRequest = false;
+    case "awaiting":
+      statusRequest = 'em andamento';
       break;
+    case "inconclued" :
+      statusRequest = 'aguardando'
     default:
       errors.push("invalid_status");
       break;
@@ -205,14 +202,11 @@ const createRequest = async (req, res) => {
         ]
       );
       return res.status(201).send({
-        status: "success",
-        message: "Request created",
+        message: "Requisição criada com sucesso",
       });
     } catch (e) {
-      console.error("Error: Creating request ", e);
       return res.status(500).send({
-        status: "error",
-        message: "Error creating request",
+        error: "Erro no servidor",
       });
     }
   }
@@ -250,13 +244,15 @@ const updateRequest = async (req, res) => {
     errors.push("invalid_or_short_description");
 
   let statusRequest;
-  switch (status_request) {
+  switch (status_request.toLowerCase()) {
     case "conclued":
-      statusRequest = true;
+      statusRequest = 'concluída';
       break;
-    case "inconclued":
-      statusRequest = false;
+    case "awaiting":
+      statusRequest = 'em andamento';
       break;
+    case "inconclued" :
+      statusRequest = 'aguardando'
     default:
       errors.push("invalid_status");
       break;
@@ -289,14 +285,12 @@ const updateRequest = async (req, res) => {
         ]
       );
       return res.status(200).send({
-        status: "success",
-        message: "Request updated",
+        message: "Requisição alterada com sucesso",
       });
     } catch (e) {
       console.error("Error: Updating request ", e);
       return res.status(500).send({
-        status: "error",
-        message: "Error updating request",
+        error: "Error de servidor",
       });
     }
   }
@@ -323,8 +317,7 @@ const deleteRequest = async (req, res) => {
     }
   } catch (e) {
     return res.status(500).send({
-      error: "Error: " + e,
-      message: "Error in delete request: " + id,
+      error: "Error in delete request: " + id,
     });
   }
 };
@@ -345,13 +338,12 @@ const filterRequestsByTitle = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        error: '404, Requests not found'
+        error: 'Requisições não encontradas'
       });
     }
   } catch (e) {
     return res.status(500).send({
-      error: "Error: " + e,
-      message: "Error in get requests by title: " + title,
+      error: "Error in get requests by title: " + title,
     });
   }
 };
@@ -361,18 +353,32 @@ const concludeStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
+  let statusRequest;
+  switch (status.toLowerCase()) {
+    case "conclued":
+      statusRequest = 'concluída';
+      break;
+    case "awaiting":
+      statusRequest = 'em andamento';
+      break;
+    case "inconclued" :
+      statusRequest = 'aguardando'
+    default:
+      return res.status(400).send({ message: 'status_inválido'});
+  }
+
   try {
     await pool.query("UPDATE requests SET status_request=$1 WHERE id=$2", [
-      status,
+      statusRequest,
       id,
     ]);
     return res.status(200).send({
-      message: "Status updated",
+      message: "status alterado com sucesso",
     });
   } catch (e) {
     return res.status(500).send({
       error: "Error: " + e,
-      message: "Error in update status",
+      error: "Error in update status",
     });
   }
 };
