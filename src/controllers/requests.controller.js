@@ -103,7 +103,7 @@ const getRequestByStatus = async (req, res) => {
   try {
     const requests = await pool.query(
       "SELECT * FROM requests WHERE status_request = $1;",
-      [search]
+      [value]
     );
     if (requests.rowCount > 0) {
       return res.status(200).send({
