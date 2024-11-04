@@ -23,7 +23,6 @@ const getAllUsers = async (req, res) => {
     //retorno do erro em JSON
     return res.status(500).send({
       error: "Error: " + e,
-      error: "Error in get all users",
     });
   }
 };
@@ -44,8 +43,7 @@ const getUsersByName = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        error: 404,
-        error: "Users not found with this name: " + name,
+        error: '404, Users not found with this name',
       });
     }
   } catch (e) {
