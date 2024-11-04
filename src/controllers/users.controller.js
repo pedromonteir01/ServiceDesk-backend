@@ -123,6 +123,10 @@ const createUser = async (req, res) => {
   //body para criar elementos
   const { name, email, password, isAdmin, isStudent } = req.body;
 
+  if(!name || !email || !password || !isAdmin || !isStudent) {
+    return false;
+  }
+
   if (typeof name !== "string") {
     errors.push("nome_inválido");
   } else if (name.length < 3) {
@@ -212,6 +216,10 @@ const updateUser = async (req, res) => {
 
   //body para criar elementos
   const { name, email, password, isAdmin, isStudent } = req.body;
+
+  if(!name || !email || !password || !isAdmin || !isStudent || !emailAux) {
+    return false;
+  }
 
   if (typeof name !== "string") {
     errors.push("nome_inválido");

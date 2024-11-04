@@ -7,7 +7,7 @@ const getAllRequests = async (req, res) => {
     const requests = await pool.query("SELECT * FROM requests;");
     if (requests.rowCount == 0) {
       return res.status(200).send({
-        message: "nenhuma requisição feita",
+        success: "nenhuma requisição feita",
       });
     } else {
       return res.status(200).send({
