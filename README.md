@@ -95,17 +95,20 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
   - **Dados de Exemplo (Body)**: 
     ```json
     {
-      "title": "Ventilador",
-      "image": "http://example.com/imagem1.jpg",
-      "description": "Grade pendurada",
-      "local": "Biblioteca"
+     "title": "Ventilador",
+    "image": "http://example.com/imagem1.jpg",
+    "description": "Grade pendurada",
+    "local": "Biblioteca",
+    "status_request": "Em andamento",
+    "date_request": "04/08/2024",
+    "date_conclusion": "null",
+    "email": "johndoe@example.com"
     }
     ```
   - **Exemplo de Resposta**: 
     ```json
     {
       "message": "Requisição criada com sucesso!",
-      "id": 1
     }
     ```
 
