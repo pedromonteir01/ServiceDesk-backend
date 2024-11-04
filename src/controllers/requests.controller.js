@@ -77,10 +77,20 @@ const getRequestByLocal = async (req, res) => {
 const getRequestByStatus = async (req, res) => {
   const { status } = req.params;
 
+  let search;
+  switch (status) {
+    case 'conclued':
+      search = true;
+      break;
+    default:
+      search = false;
+      break;
+  }
+
   try {
     const requests = await pool.query(
       "SELECT * FROM requests WHERE status_request = $1;",
-      [status]
+      [search]
     );
     if (requests.rowCount > 0) {
       return res.status(200).send({
