@@ -1,16 +1,16 @@
-import {
-    GetObjectCommand,
-    ListObjectsV2Command,
-    PutObjectCommand,
-    S3Client,
-  } from "@aws-sdk/client-s3";
-  import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-  import { v4 as uuid } from "uuid";
+const { 
+    GetObjectCommand, 
+    ListObjectsV2Command, 
+    PutObjectCommand, 
+    S3Client 
+} = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { v4: uuid } = require("uuid");
   
   const s3 = new S3Client();
   const BUCKET = process.env.BUCKET;
   
-  export const uploadToS3 = async ({ file, userId }) => {
+ const uploadToS3 = async ({ file, userId }) => {
     const key = `${userId}/${uuid()}`;
     const command = new PutObjectCommand({
       Bucket: BUCKET,
@@ -41,7 +41,7 @@ import {
     ).map((image) => image.Key);
   };
   
-  export const getUserPresignedUrls = async (userId) => {
+   const getUserPresignedUrls = async (userId) => {
     try {
       const imageKeys = await getImageKeysByUser(userId);
   
@@ -57,3 +57,5 @@ import {
       return { error };
     }
   };
+
+    module.exports = { uploadToS3, getUserPresignedUrls };

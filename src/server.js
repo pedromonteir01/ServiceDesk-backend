@@ -5,7 +5,7 @@ const indexRoutes = require("./routes/index.routes"); // Importa as rotas
 const { json } = require("express"); // Importa o método json do express
 const multer = require("multer"); // Importa o multer para lidar com uploads de arquivos
 const { memoryStorage } = require("multer"); // Importa o memoryStorage do multer
-const { getUserPresignedUrls, uploadToS3 } = require("./s3.mjs"); // Importa as funções do s3.mjs
+const { getUserPresignedUrls, uploadToS3 } = require("./s3.js"); // Importa as funções do s3.mjs
 
 const app = express(); // Cria o servidor e armazena na variável app
 const port = process.env.PORT || 5000; // Pega a porta do arquivo .env ou usa a porta 5000
