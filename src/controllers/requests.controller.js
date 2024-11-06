@@ -1,5 +1,8 @@
 const pool = require("../database/database.config");
 const locaisUnicos = require("../models/locals/locals");
+const upload = require('multer')(); // Assumindo que você está usando multer para upload de arquivos
+const { uploadToS3, getUserPresignedUrls } = require('../s3'); // Importe suas funções de upload e recuperação de URLs
+
 
 // Função para pegar todas as requisições
 const getAllRequests = async (req, res) => {
@@ -152,7 +155,7 @@ const createRequest = async (req, res) => {
     title,
     description,
     local,
-    image,
+    image, // Recebendo a imagem como base64
     status_request,
     date_request,
     date_conclusion,
@@ -171,7 +174,7 @@ const createRequest = async (req, res) => {
     case "awaiting":
       statusRequest = 'em andamento';
       break;
-    case "inconclued" :
+    case "inconclued":
       statusRequest = 'aguardando';
       break;
     default:
@@ -179,36 +182,31 @@ const createRequest = async (req, res) => {
       break;
   }
 
-  let dateConclusion = date_conclusion || null;
+  if (errors.length > 0) {
+    return res.status(400).json({ errors });
+  }
 
-  if (errors.length !== 0) {
-    return res.status(400).send({
-      errors: errors,
-    });
-  } else {
-    try {
+  let imageUrl = null;
+  if (image) {
+    // Decodificar a imagem base64
+    const buffer = Buffer.from(image.split(",")[1], 'base64');
+    const file = {
+      buffer,
+      originalname: 'image.jpg', // Você pode ajustar o nome do arquivo conforme necessário
+    };
+    const { error, key } = await uploadToS3({ file, userId: email });
+    if (error) return res.status(500).json({ message: error.message });
+    imageUrl = key; // URL da imagem salva no S3
+  }
 
-      await pool.query(
-        "INSERT INTO requests (image, description, local, status_request, date_request, date_conclusion, email, title) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);",
-        [
-          image,
-          description,
-          local,
-          statusRequest,
-          date_request,
-          dateConclusion,
-          email,
-          title.toLowerCase(),
-        ]
-      );
-      return res.status(201).send({
-        message: "Requisição criada com sucesso",
-      });
-    } catch (e) {
-      return res.status(500).send({
-        error: "Erro no servidor",
-      });
-    }
+  try {
+    const newRequest = await pool.query(
+      "INSERT INTO requests (title, description, local, image, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;",
+      [title, description, local, imageUrl, statusRequest, date_request, date_conclusion, email]
+    );
+    return res.status(201).json(newRequest.rows[0]);
+  } catch (e) {
+    return res.status(500).json({ error: "Erro de servidor" });
   }
 };
 
