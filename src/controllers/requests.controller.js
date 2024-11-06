@@ -171,7 +171,8 @@ const createRequest = async (req, res) => {
       statusRequest = 'em andamento';
       break;
     case "inconclued" :
-      statusRequest = 'aguardando'
+      statusRequest = 'aguardando';
+      break;
     default:
       errors.push("invalid_status");
       break;
