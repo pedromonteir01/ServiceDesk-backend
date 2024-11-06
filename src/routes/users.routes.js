@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const usersController = require("../controllers/users.controller");
+const auth = require("../middlewares/auth");
 //inicializa a rota
 const usersRouter = Router();
 
@@ -11,6 +12,6 @@ usersRouter.get("/role/:role", usersController.getUserByRole);
 usersRouter.post("/", usersController.createUser);
 usersRouter.put("/:emailAux", usersController.updateUser);
 usersRouter.delete("/:email", usersController.deleteUser);
-usersRouter.patch('/change/password/:email', usersController.changePassword); 
+usersRouter.patch('/change/password/:email', auth, usersController.changePassword);
 
 module.exports = usersRouter;

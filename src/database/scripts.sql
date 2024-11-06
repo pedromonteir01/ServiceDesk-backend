@@ -24,6 +24,6 @@ CREATE TABLE requests (
 
 CREATE TABLE refreshToken (
   token VARCHAR(255) PRIMARY KEY,
-  expires INT,
+  expires DATE NOT NULL,
   email VARCHAR(255) REFERENCES users(email)
 );

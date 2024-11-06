@@ -331,53 +331,42 @@ const deleteUser = async (req, res) => {
 const changePassword = async (req, res) => {
   let errors = [];
 
-  console.log('tests');
-  
-  //email por params
+  // Input validation
   const { email } = req.params;
-  const { password } = req.body;
-  console.log(email, password);
-  
+  const { password, confirmPassword } = req.body;
 
-  try {
-    const user = (
-      await pool.query("SELECT * FROM users WHERE email=$1;", [email])
-    ).rows[0];
-    console.log(user);
-    
-    //verifica se o usuario existe
-    if (!user) {
-      return res.status(404).send({ error: "user not found" });
-    } else {
-      if (password.length < 8) {
-        errors.push("senha_deve_ter_8_no_mínimo_caracteres");
-      } else if (password.split("").includes(special)) {
-        errors.push("senha_deve_ter_caracteres_especiais");
-      } else if (password == user.password) {
-        errors.push("same_password");
-      }
-
-      const token = crypto.randomBytes(20).toString('hex');
-
-      const now = new Date();
-      now.setHours(now.getHours() + 1);
-
-      if(now > user.passwordResetExpires) return res.status(401).send({ error: 'token expired' });
-
-      await pool.query("UPDATE users SET passwordResetToken=$1, passwordResetExpires=$2 WHERE email=$3;", [
-        token,
-        now,
-        email
-      ]);
-
-      console.log(token, now);
-      
-
-      return res.status(200).send({ success: "password changed" });
-    }
-  } catch (e) {
-    return res.status(500).send({ error: e, error: "server error" });
+  if (!email || !password || !confirmPassword) {
+    return res.status(400).send({ error: "Missing required fields" });
   }
+
+  if (password.length < 8) {
+    errors.push("Senha deve ter pelo menos 8 caracteres");
+  }
+
+  if (password !== confirmPassword) {
+    errors.push("Senhas não coincidem");
+  }
+
+  // Check if user exists
+  const user = await pool.query("SELECT * FROM users WHERE email=$1;", [email]);
+  
+  if (user.rows.length === 0) {
+    return res.status(404).send({ error: "Usuário não encontrado" });
+  }
+
+  // Generate reset token
+  const now = new Date();
+
+  // Check if token is expired
+  const userToken = (await pool.query("SELECT * FROM refreshtoken WHERE email=$1 AND expires > $2", [email, now])).rows[0];
+  if (!userToken) {
+    return res.status(401).send({ error: "Token expirado ou inválido" });
+  }
+  // Update user password
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await pool.query("UPDATE users SET password=$1 WHERE email=$2;", [hashedPassword, email]);
+
+  return res.status(200).send({ success: "Senha alterada com sucesso" });
 };
 
 module.exports = {

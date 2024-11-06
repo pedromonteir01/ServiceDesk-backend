@@ -34,12 +34,15 @@ const login = async (req, res) => {
         // Verifica se já existe um refresh token para este usuário
         const existingToken = (await pool.query('SELECT * FROM refreshToken WHERE email=$1', [email])).rows[0];
 
+        let expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+
         if (existingToken) {
             // Atualiza o token existente
-            await pool.query('UPDATE refreshToken SET token=$1, expires=$2 WHERE email=$3', [refreshToken, 604800, email]);
+            await pool.query('UPDATE refreshToken SET token=$1, expires=$2 WHERE email=$3', [refreshToken, expires, email]);
         } else {
             // Insere um novo token se não existir
-            await pool.query('INSERT INTO refreshToken (token, expires, email) VALUES ($1, $2, $3)', [refreshToken, 604800, email]);
+            await pool.query('INSERT INTO refreshToken (token, expires, email) VALUES ($1, $2, $3)', [refreshToken, expires, email]);
         }
 
         return res.status(200).send({
