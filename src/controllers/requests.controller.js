@@ -152,6 +152,7 @@ const createRequest = async (req, res) => {
     title,
     description,
     local,
+    image,
     status_request,
     date_request,
     date_conclusion,
@@ -186,8 +187,6 @@ const createRequest = async (req, res) => {
     });
   } else {
     try {
-      // O multer armazena o arquivo da imagem como req.file
-      const image = req.file ? req.file.filename : null;
 
       await pool.query(
         "INSERT INTO requests (image, description, local, status_request, date_request, date_conclusion, email, title) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);",
