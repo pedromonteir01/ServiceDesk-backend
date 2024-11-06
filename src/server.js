@@ -2,6 +2,7 @@ require("dotenv").config(); // Carrega as variáveis de ambiente
 const express = require("express"); // O express serve para criar o servidor
 const cors = require("cors"); // O cors serve para permitir requisições de outros domínios
 const indexRoutes = require("./routes/index.routes"); // Importa as rotas
+const bodyParser = require('body-parser');
 const { json } = require("express"); // Importa o método json do express
 // const multer = require("multer"); // Importa o multer para lidar com uploads de arquivos
 // const { memoryStorage } = require("multer"); // Importa o memoryStorage do multer
@@ -21,6 +22,9 @@ app.use(
     origin: "*",
   })
 );
+// Aumentar o limite de tamanho da carga útil para 50 MB
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(json());
 
 // app.post("/images", upload.single("image"), (req, res) => {
