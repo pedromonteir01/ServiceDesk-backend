@@ -155,7 +155,7 @@ const createRequest = async (req, res) => {
     title,
     description,
     local,
-    image, // Recebendo a imagem como base64
+    image, // Recebendo a imagem como array de bytes
     imageName, // Nome do arquivo de imagem
     imageType, // Tipo de imagem
     status_request,
@@ -190,9 +190,8 @@ const createRequest = async (req, res) => {
 
   let imageUrl = null;
   if (image) {
-    // Remover o prefixo 'data:image/png;base64,' e converter a imagem base64 para um buffer
-    const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
-    const buffer = Buffer.from(base64Data, 'base64');
+    // Converter o array de bytes de volta para um buffer
+    const buffer = Buffer.from(image);
     const file = {
       buffer,
       originalname: imageName || 'image.jpg', // Usar o nome do arquivo fornecido ou um padrão
