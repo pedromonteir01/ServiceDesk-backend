@@ -156,6 +156,8 @@ const createRequest = async (req, res) => {
     description,
     local,
     image, // Recebendo a imagem como base64
+    imageName, // Nome do arquivo de imagem
+    imageType, // Tipo de imagem
     status_request,
     date_request,
     date_conclusion,
@@ -188,11 +190,13 @@ const createRequest = async (req, res) => {
 
   let imageUrl = null;
   if (image) {
-    // Decodificar a imagem base64
-    const buffer = Buffer.from(image.split(",")[1], 'base64');
+    // Remover o prefixo 'data:image/png;base64,' e converter a imagem base64 para um buffer
+    const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
+    const buffer = Buffer.from(base64Data, 'base64');
     const file = {
       buffer,
-      originalname: 'image.jpg', // Você pode ajustar o nome do arquivo conforme necessário
+      originalname: imageName || 'image.jpg', // Usar o nome do arquivo fornecido ou um padrão
+      mimetype: imageType || 'image/jpeg', // Usar o tipo de imagem fornecido ou um padrão
     };
     const { error, key } = await uploadToS3({ file, userId: email });
     if (error) return res.status(500).json({ message: error.message });
