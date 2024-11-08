@@ -28,7 +28,19 @@ const uploadToS3 = async ({ file, userId }) => {
 
   try {
     await s3.send(command);
-    return { key };
+    console.log(`File uploaded successfully. Key: ${
+      key
+    }`
+    )
+
+    const url = await getSignedUrl(s3, new GetObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+    }));
+    if (!url) {
+      throw new Error("Error getting the signed URL");
+    }
+    return { url };
   } catch (error) {
     console.log(error);
     return { error };
