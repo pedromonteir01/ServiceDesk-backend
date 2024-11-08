@@ -13,7 +13,7 @@ CREATE TABLE users (
 CREATE TABLE requests (
   id SERIAL PRIMARY KEY,
   title VARCHAR(35),
-  image VARCHAR(255),
+  image TEXT,
   description TEXT,
   local VARCHAR(255),
   status_request VARCHAR(12),
