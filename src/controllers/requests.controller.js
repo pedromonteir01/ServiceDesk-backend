@@ -204,7 +204,6 @@ const createRequest = async (req, res) => {
   }
 
   try {
-    console.log(title, description, local, imageUrl, statusRequest, date_request, date_conclusion, email);
     const newRequest = await pool.query(
       "INSERT INTO requests (title, description, local, image, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;",
       [title, description, local, imageUrl, statusRequest, date_request, date_conclusion, email]
