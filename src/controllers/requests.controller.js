@@ -197,12 +197,14 @@ const createRequest = async (req, res) => {
       originalname: imageName || 'image.jpg', // Usar o nome do arquivo fornecido ou um padrão
       mimetype: imageType || 'image/jpeg', // Usar o tipo de imagem fornecido ou um padrão
     };
-    const { error, key } = await uploadToS3({ file, userId: email });
+    const { error, url } = await uploadToS3({ file, userId: email });
+
     if (error) return res.status(500).json({ message: error.message });
-    imageUrl = key; // URL da imagem salva no S3
+    imageUrl = url; // URL da imagem salva no S3
   }
 
   try {
+    console.log(title, description, local, imageUrl, statusRequest, date_request, date_conclusion, email);
     const newRequest = await pool.query(
       "INSERT INTO requests (title, description, local, image, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;",
       [title, description, local, imageUrl, statusRequest, date_request, date_conclusion, email]
