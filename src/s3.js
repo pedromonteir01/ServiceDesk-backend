@@ -28,11 +28,6 @@ const uploadToS3 = async ({ file, userId }) => {
 
   try {
     await s3.send(command);
-    console.log(`File uploaded successfully. Key: ${
-      key
-    }`
-    )
-
     const url = await getSignedUrl(s3, new GetObjectCommand({
       Bucket: BUCKET,
       Key: key,
