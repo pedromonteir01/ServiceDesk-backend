@@ -1,8 +1,11 @@
 const pool = require("../database/database.config");
 const { verifyEmail } = require("../models/verifysFunctions/verifyElements");
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const special = ["!", "@", "#", "$", "%", "&", "*", "(", ")", "/", "?", "|"];
+const number = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const upper = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+const lower = [ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
 const getAllUsers = async (req, res) => {
   try {
@@ -43,7 +46,7 @@ const getUsersByName = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        error: '404, Users not found with this name',
+        error: "404, Users not found with this name",
       });
     }
   } catch (e) {
@@ -123,7 +126,7 @@ const createUser = async (req, res) => {
   //body para criar elementos
   const { name, email, password, isAdmin, isStudent } = req.body;
 
-  if(!name || !email || !password || !isAdmin || !isStudent) {
+  if (!name || !email || !password || !isAdmin || !isStudent) {
     return false;
   }
 
@@ -149,6 +152,12 @@ const createUser = async (req, res) => {
     errors.push("senha_deve_ter_8_no_mínimo_caracteres");
   } else if (password.split("").includes(special)) {
     errors.push("senha_deve_ter_caracteres_especiais");
+  } else if (password.split("").includes(number)) {
+    errors.push("senha_deve_ter_caracteres_numericos");
+  } else if (password.split("").includes(upper)) {
+    errors.push("senha_deve_ter_caracteres_maiusculos");
+  } else if (password.split("").includes(lower)) {
+    errors.push("senha_deve_ter_caracteres_minusculos");
   }
 
   let statusAdmin;
@@ -177,18 +186,20 @@ const createUser = async (req, res) => {
       break;
   }
 
-  const user = (await pool.query('SELECT * FROM users WHERE email=$1', [email])).rows[0];
-  
-  if(user) {
-    return res.status(400).send({ error: 'usuário com este email já está cadastrado' });
+  const user = (await pool.query("SELECT * FROM users WHERE email=$1", [email]))
+    .rows[0];
+
+  if (user) {
+    return res
+      .status(400)
+      .send({ error: "usuário com este email já está cadastrado" });
   }
-  
 
   if (errors.length !== 0) {
     return res.status(400).send({ errors });
   } else {
     try {
-      const hash = await bcrypt.hash(password, 10); 
+      const hash = await bcrypt.hash(password, 10);
       //requisição para o banco
       await pool.query(
         "INSERT INTO users(name, email, password, isAdmin, isStudent) VALUES($1, $2, $3, $4, $5);",
@@ -217,7 +228,7 @@ const updateUser = async (req, res) => {
   //body para criar elementos
   const { name, email, password, isAdmin, isStudent } = req.body;
 
-  if(!name || !email || !password || !isAdmin || !isStudent || !emailAux) {
+  if (!name || !email || !password || !isAdmin || !isStudent || !emailAux) {
     return false;
   }
 
@@ -349,7 +360,7 @@ const changePassword = async (req, res) => {
 
   // Check if user exists
   const user = await pool.query("SELECT * FROM users WHERE email=$1;", [email]);
-  
+
   if (user.rows.length === 0) {
     return res.status(404).send({ error: "Usuário não encontrado" });
   }
@@ -358,13 +369,21 @@ const changePassword = async (req, res) => {
   const now = new Date();
 
   // Check if token is expired
-  const userToken = (await pool.query("SELECT * FROM refreshtoken WHERE email=$1 AND expires > $2", [email, now])).rows[0];
+  const userToken = (
+    await pool.query(
+      "SELECT * FROM refreshtoken WHERE email=$1 AND expires > $2",
+      [email, now]
+    )
+  ).rows[0];
   if (!userToken) {
     return res.status(401).send({ error: "Token expirado ou inválido" });
   }
   // Update user password
   const hashedPassword = await bcrypt.hash(password, 10);
-  await pool.query("UPDATE users SET password=$1 WHERE email=$2;", [hashedPassword, email]);
+  await pool.query("UPDATE users SET password=$1 WHERE email=$2;", [
+    hashedPassword,
+    email,
+  ]);
 
   return res.status(200).send({ success: "Senha alterada com sucesso" });
 };
