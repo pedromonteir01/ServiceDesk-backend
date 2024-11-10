@@ -46,9 +46,9 @@ const getRequestById = async (req, res) => {
       id,
     ]);
     if (request.rowCount > 0) {
-      return res.status(200).send({
-        request: request.rows[0],
-      });
+      return res.status(200).send(
+        request.rows[0],
+      );
     } else {
       return res.status(404).send({
         message: "Não existe requisição com este id"
@@ -164,53 +164,63 @@ const createRequest = async (req, res) => {
     email,
   } = req.body;
 
-  if (!title || title.length < 6) errors.push("invalid_or_short_name");
-  if (!description || description.length < 10)
-    errors.push("invalid_or_short_description");
+  // Validações de campo
+  if (!title || title.length < 4) errors.push("O título deve ter pelo menos 4 caracteres.");
+  if (!description || description.length < 10) errors.push("A descrição deve ter pelo menos 10 caracteres.");
+  if (!local) errors.push("O campo 'local' é obrigatório.");
+  if (!status_request) errors.push("O status da requisição é obrigatório.");
 
+  // Validação e tradução do status_request
   let statusRequest;
   switch (status_request.toLowerCase()) {
     case "conclued":
-      statusRequest = 'concluída';
+      statusRequest = "concluída";
       break;
     case "awaiting":
-      statusRequest = 'em andamento';
+      statusRequest = "em andamento";
       break;
     case "inconclued":
-      statusRequest = 'aguardando';
+      statusRequest = "aguardando";
       break;
     default:
-      errors.push("invalid_status");
+      errors.push("Status de requisição inválido.");
       break;
   }
 
+  // Retorno de erros de validação
   if (errors.length > 0) {
     return res.status(400).json({ errors });
   }
 
+  // Processo de upload da imagem (se fornecida)
   let imageUrl = null;
   if (image) {
-    // Converter o array de bytes de volta para um buffer
-    const buffer = Buffer.from(image);
-    const file = {
-      buffer,
-      originalname: imageName || 'image.jpg', // Usar o nome do arquivo fornecido ou um padrão
-      mimetype: imageType || 'image/jpeg', // Usar o tipo de imagem fornecido ou um padrão
-    };
-    const { error, url } = await uploadToS3({ file, userId: email });
+    try {
+      const buffer = Buffer.from(image);
+      const file = {
+        buffer,
+        originalname: imageName || "imagem.jpg",
+        mimetype: imageType || "image/jpeg",
+      };
+      const { error, url } = await uploadToS3({ file, userId: email });
 
-    if (error) return res.status(500).json({ message: error.message });
-    imageUrl = url; // URL da imagem salva no S3
+      if (error) throw new Error(error.message);
+      imageUrl = url;
+    } catch (error) {
+      return res.status(500).json({ errors: "Erro ao fazer upload da imagem." });
+    }
   }
 
+  // Inserção da nova requisição no banco de dados
   try {
     const newRequest = await pool.query(
       "INSERT INTO requests (title, description, local, image, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;",
-      [title, description, local, imageUrl, statusRequest, date_request, date_conclusion, email]
+      [title, description, local, imageUrl, statusRequest, null, date_conclusion, email]
     );
     return res.status(201).json(newRequest.rows[0]);
-  } catch (e) {
-    return res.status(500).json({ error: "Erro de servidor" });
+  } catch (error) {
+    console.error("Erro de banco de dados:", error);
+    return res.status(500).json({ errors: "Erro interno do servidor ao salvar a requisição." });
   }
 };
 
