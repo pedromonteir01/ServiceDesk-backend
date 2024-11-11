@@ -1,13 +1,12 @@
 const pool = require("../database/database.config");
 const locaisUnicos = require("../models/locals/locals");
-const upload = require('multer')(); // Assumindo que você está usando multer para upload de arquivos
 const { uploadToS3, getUserPresignedUrls } = require('../s3'); // Importe suas funções de upload e recuperação de URLs
 
 
 // Função para pegar todas as requisições
 const getAllRequests = async (req, res) => {
   try {
-    const requests = await pool.query("SELECT * FROM requests;");
+    const requests = await pool.query("SELECT * FROM requests order by date_request asc;");
     if (requests.rowCount == 0) {
       return res.status(200).send({
         success: "nenhuma requisição feita",
