@@ -70,8 +70,13 @@ const locaisInstalacao = [
   },
 ];
 
-const locaisUnicos = Array.from(
+const locaisArray = Array.from(
   new Map(locaisInstalacao.map((item) => [item.id, item])).values()
+);
+
+//Ordem alfabetica
+const locaisUnicos = locaisArray.sort((a, b) =>
+  a.nome.localeCompare(b.nome)
 );
 
 module.exports = locaisUnicos;
