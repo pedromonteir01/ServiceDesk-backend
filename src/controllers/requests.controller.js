@@ -51,7 +51,7 @@ const getRequestById = async (req, res) => {
       );
     } else {
       return res.status(404).send({
-        message: "Não existe requisição com este id"
+        error: "Não existe requisição com este id"
       });
     }
   } catch (e) {
@@ -75,7 +75,7 @@ const getRequestByLocal = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        message: "Não há requisições com este local"
+        error: "Não há requisições com este local"
       });
     }
   } catch (e) {
@@ -92,13 +92,14 @@ const getRequestByStatus = async (req, res) => {
   let statusRequest;
   switch (status.toLowerCase()) {
     case "conclued":
-      statusRequest = 'concluída';
+      statusRequest = 'concluida';
       break;
     case "awaiting":
       statusRequest = 'em andamento';
       break;
     case "inconclued" :
-      statusRequest = 'aguardando'
+      statusRequest = 'aguardando';
+      break;
     default:
       errors.push("invalid_status");
       break;
@@ -116,7 +117,7 @@ const getRequestByStatus = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        message: "Requisições não encontradas",
+        error: "Requisições não encontradas",
       });
     }
   } catch (e) {
@@ -126,19 +127,70 @@ const getRequestByStatus = async (req, res) => {
   }
 };
 
+const getRequestByCreation = async (req, res) => {
+  const { creation } = req.params;
+  try {
+    const requests = pool.query('SELECT * FROM requests WHERE date_request=$1', [creation]);
+    
+    if (requests.rowCount > 0) {
+      return res.status(200).send({
+        results: requests.rowCount,
+        requests: requests.rows,
+      });
+    } else {
+      return res.status(404).send({
+        error: "Requisições não encontradas",
+      });
+    }
+
+  } catch(e) {
+    return res.status(500).send({
+      error: "Error de servidor"
+    });
+  }
+
+}
+
+const getRequestByFinish = async (req, res) => {
+  const { finish } = req.params;
+  try {
+    const requests = pool.query('SELECT * FROM requests WHERE date_conclusion=$1', [finish]);
+    
+    if (requests.rowCount > 0) {
+      return res.status(200).send({
+        results: requests.rowCount,
+        requests: requests.rows,
+      });
+    } else {
+      return res.status(404).send({
+        error: "Requisições não encontradas",
+      });
+    }
+
+  } catch(e) {
+    return res.status(500).send({
+      error: "Error de servidor"
+    });
+  }
+
+}
+
 // Função para pegar uma requisição por usuário
 const getRequestByUser = async (req, res) => {
   const { email } = req.params;
   try {
     const requests = await pool.query(
-      "SELECT * FROM requests WHERE user = $1;",
-      [email]
+      "SELECT * FROM requests WHERE email LIKE $1;",
+      [`${email}%`]
     );
     if (requests.rowCount > 0) {
-      return res.status(200).send(requests.rows[0]);
+      return res.status(200).send({
+        results: requests.rowCount,
+        requests: requests.rows,
+      });
     } else {
       return res.status(404).send({
-        message: "Este usuário não fez requisições"
+        error: "Este usuário não fez requisições"
       });
     }
   } catch (e) {
@@ -174,7 +226,7 @@ const createRequest = async (req, res) => {
   let statusRequest;
   switch (status_request.toLowerCase()) {
     case "conclued":
-      statusRequest = "concluída";
+      statusRequest = "concluida";
       break;
     case "awaiting":
       statusRequest = "em andamento";
@@ -407,4 +459,6 @@ module.exports = {
   deleteRequest,
   filterRequestsByTitle,
   concludeStatus,
+  getRequestByCreation,
+  getRequestByFinish
 };

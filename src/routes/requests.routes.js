@@ -11,6 +11,8 @@ requestsRouter.get("/locais", requestsController.getLocaisInstalacao);
 requestsRouter.get("/:id", requestsController.getRequestById);
 requestsRouter.get("/local/:local", requestsController.getRequestByLocal);
 requestsRouter.get("/status/:status", requestsController.getRequestByStatus);
+requestsRouter.get("/creation/:creation", requestsController.getRequestByCreation);
+requestsRouter.get("/finish/:finish", requestsController.getRequestByFinish);
 requestsRouter.get("/user/:email", requestsController.getRequestByUser);
 requestsRouter.post("/", auth, requestsController.createRequest); 
 requestsRouter.put("/:id", requestsController.updateRequest);
