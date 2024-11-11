@@ -6,7 +6,7 @@ const { uploadToS3, getUserPresignedUrls } = require('../s3'); // Importe suas f
 // Função para pegar todas as requisições
 const getAllRequests = async (req, res) => {
   try {
-    const requests = await pool.query("SELECT * FROM requests order by date_request asc;");
+    const requests = await pool.query("SELECT * FROM requests order by date_request desc;");
     if (requests.rowCount == 0) {
       return res.status(200).send({
         success: "nenhuma requisição feita",
