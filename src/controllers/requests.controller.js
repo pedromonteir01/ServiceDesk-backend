@@ -267,7 +267,7 @@ const createRequest = async (req, res) => {
   try {
     const newRequest = await pool.query(
       "INSERT INTO requests (title, description, local, image, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;",
-      [title, description, local, imageUrl, statusRequest, null, date_conclusion, email]
+      [title, description, local, imageUrl, statusRequest, date_request, null, email]
     );
     return res.status(201).json(newRequest.rows[0]);
   } catch (error) {
