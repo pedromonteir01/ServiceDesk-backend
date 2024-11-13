@@ -28,6 +28,7 @@ const command = new PutObjectCommand({
 
 const signedUrlOptions = {
   expiresIn: 604800, // URL expires in 7 days (maximum allowed)
+  
 };
 
 try {
