@@ -88,6 +88,8 @@ const getRequestByLocal = async (req, res) => {
 const getRequestByStatus = async (req, res) => {
   const { status } = req.params;
 
+  let errors=[];
+
   let statusRequest;
   switch (status.toLowerCase()) {
     case "conclued":
