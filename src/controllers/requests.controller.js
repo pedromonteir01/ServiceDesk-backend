@@ -1,12 +1,13 @@
 const pool = require("../database/database.config");
 const locaisUnicos = require("../models/locals/locals");
-const { uploadToS3, getUserPresignedUrls } = require('../s3'); // Importe suas funções de upload e recuperação de URLs
-
+const { uploadToS3, getUserPresignedUrls } = require("../s3"); // Importe suas funções de upload e recuperação de URLs
 
 // Função para pegar todas as requisições
 const getAllRequests = async (req, res) => {
   try {
-    const requests = await pool.query("SELECT * FROM requests order by date_request desc;");
+    const requests = await pool.query(
+      "SELECT * FROM requests order by date_request desc;"
+    );
     if (requests.rowCount == 0) {
       return res.status(200).send({
         success: "nenhuma requisição feita",
@@ -32,7 +33,32 @@ const getLocaisInstalacao = (req, res) => {
     });
   } catch (e) {
     return res.status(500).send({
-      error: "Erro de servidor"
+      error: "Erro de servidor",
+    });
+  }
+};
+
+// Função para pegar uma requisição por ambiente/local
+const getRequestByLocal = async (req, res) => {
+  const { local } = req.params;
+  try {
+    const requests = await pool.query(
+      "SELECT * FROM requests WHERE local = $1;",
+      [local]
+    );
+    if (requests.rowCount > 0) {
+      return res.status(200).send({
+        results: requests.rowCount,
+        requests: requests.rows,
+      });
+    } else {
+      return res.status(404).send({
+        error: "Requisições não encontradas",
+      });
+    }
+  } catch (e) {
+    return res.status(500).send({
+      error: "Erro de servidor",
     });
   }
 };
@@ -45,41 +71,15 @@ const getRequestById = async (req, res) => {
       id,
     ]);
     if (request.rowCount > 0) {
-      return res.status(200).send(
-        request.rows[0],
-      );
+      return res.status(200).send(request.rows[0]);
     } else {
       return res.status(404).send({
-        error: "Não existe requisição com este id"
+        error: "Não existe requisição com este id",
       });
     }
   } catch (e) {
     return res.status(500).send({
-      error: "Erro de servidor"
-    });
-  }
-};
-
-// Função para pegar uma requisição por ambiente/local
-const getRequestByLocal = async (req, res) => {
-  const { local } = req.params;
-  try {
-    const requests = await pool.query(
-      "SELECT * FROM requests WHERE local LIKE $1;",
-      [`%${local.toLowerCase()}%`]
-    );
-    if (requests.rowCount > 0) {
-      return res.status(200).send({
-        requests: requests.rows,
-      });
-    } else {
-      return res.status(404).send({
-        error: "Não há requisições com este local"
-      });
-    }
-  } catch (e) {
-    return res.status(500).send({
-      error: "Erro de servidor"
+      error: "Erro de servidor",
     });
   }
 };
@@ -88,18 +88,18 @@ const getRequestByLocal = async (req, res) => {
 const getRequestByStatus = async (req, res) => {
   const { status } = req.params;
 
-  let errors=[];
+  let errors = [];
 
   let statusRequest;
   switch (status.toLowerCase()) {
     case "conclued":
-      statusRequest = 'concluida';
+      statusRequest = "concluida";
       break;
     case "awaiting":
-      statusRequest = 'em andamento';
+      statusRequest = "em andamento";
       break;
-    case "inconclued" :
-      statusRequest = 'aguardando';
+    case "inconclued":
+      statusRequest = "aguardando";
       break;
     default:
       errors.push("invalid_status");
@@ -131,8 +131,11 @@ const getRequestByStatus = async (req, res) => {
 const getRequestByCreation = async (req, res) => {
   const { creation } = req.params;
   try {
-    const requests = pool.query('SELECT * FROM requests WHERE date_request=$1', [creation]);
-    
+    const requests = pool.query(
+      "SELECT * FROM requests WHERE date_request=$1",
+      [creation]
+    );
+
     if (requests.rowCount > 0) {
       return res.status(200).send({
         results: requests.rowCount,
@@ -143,20 +146,21 @@ const getRequestByCreation = async (req, res) => {
         error: "Requisições não encontradas",
       });
     }
-
-  } catch(e) {
+  } catch (e) {
     return res.status(500).send({
-      error: "Error de servidor"
+      error: "Error de servidor",
     });
   }
-
-}
+};
 
 const getRequestByFinish = async (req, res) => {
   const { finish } = req.params;
   try {
-    const requests = pool.query('SELECT * FROM requests WHERE date_conclusion=$1', [finish]);
-    
+    const requests = pool.query(
+      "SELECT * FROM requests WHERE date_conclusion=$1",
+      [finish]
+    );
+
     if (requests.rowCount > 0) {
       return res.status(200).send({
         results: requests.rowCount,
@@ -167,14 +171,12 @@ const getRequestByFinish = async (req, res) => {
         error: "Requisições não encontradas",
       });
     }
-
-  } catch(e) {
+  } catch (e) {
     return res.status(500).send({
-      error: "Error de servidor"
+      error: "Error de servidor",
     });
   }
-
-}
+};
 
 // Função para pegar uma requisição por usuário
 const getRequestByUser = async (req, res) => {
@@ -191,12 +193,12 @@ const getRequestByUser = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        error: "Este usuário não fez requisições"
+        error: "Este usuário não fez requisições",
       });
     }
   } catch (e) {
     return res.status(500).send({
-      error: "Error de servidor"
+      error: "Error de servidor",
     });
   }
 };
@@ -218,8 +220,10 @@ const createRequest = async (req, res) => {
   } = req.body;
 
   // Validações de campo
-  if (!title || title.length < 4) errors.push("O título deve ter pelo menos 4 caracteres.");
-  if (!description || description.length < 10) errors.push("A descrição deve ter pelo menos 10 caracteres.");
+  if (!title || title.length < 4)
+    errors.push("O título deve ter pelo menos 4 caracteres.");
+  if (!description || description.length < 10)
+    errors.push("A descrição deve ter pelo menos 10 caracteres.");
   if (!local) errors.push("O campo 'local' é obrigatório.");
   if (!status_request) errors.push("O status da requisição é obrigatório.");
 
@@ -260,7 +264,9 @@ const createRequest = async (req, res) => {
       if (error) throw new Error(error.message);
       imageUrl = url;
     } catch (error) {
-      return res.status(500).json({ errors: "Erro ao fazer upload da imagem." });
+      return res
+        .status(500)
+        .json({ errors: "Erro ao fazer upload da imagem." });
     }
   }
 
@@ -268,12 +274,23 @@ const createRequest = async (req, res) => {
   try {
     const newRequest = await pool.query(
       "INSERT INTO requests (title, description, local, image, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;",
-      [title, description, local, imageUrl, statusRequest, date_request, null, email]
+      [
+        title,
+        description,
+        local,
+        imageUrl,
+        statusRequest,
+        date_request,
+        null,
+        email,
+      ]
     );
     return res.status(201).json(newRequest.rows[0]);
   } catch (error) {
     console.error("Erro de banco de dados:", error);
-    return res.status(500).json({ errors: "Erro interno do servidor ao salvar a requisição." });
+    return res
+      .status(500)
+      .json({ errors: "Erro interno do servidor ao salvar a requisição." });
   }
 };
 
@@ -311,13 +328,13 @@ const updateRequest = async (req, res) => {
   let statusRequest;
   switch (status_request.toLowerCase()) {
     case "conclued":
-      statusRequest = 'concluída';
+      statusRequest = "concluída";
       break;
     case "awaiting":
-      statusRequest = 'em andamento';
+      statusRequest = "em andamento";
       break;
-    case "inconclued" :
-      statusRequest = 'aguardando'
+    case "inconclued":
+      statusRequest = "aguardando";
     default:
       errors.push("invalid_status");
       break;
@@ -403,7 +420,7 @@ const filterRequestsByTitle = async (req, res) => {
       });
     } else {
       return res.status(404).send({
-        error: 'Requisições não encontradas'
+        error: "Requisições não encontradas",
       });
     }
   } catch (e) {
@@ -421,32 +438,30 @@ const concludeStatus = async (req, res) => {
   let statusRequest;
   switch (status.toLowerCase()) {
     case "conclued":
-      statusRequest = 'concluida';
+      statusRequest = "concluida";
       break;
     case "awaiting":
-      statusRequest = 'em andamento';
+      statusRequest = "em andamento";
       break;
-    case "inconclued" :
-      statusRequest = 'aguardando'
+    case "inconclued":
+      statusRequest = "aguardando";
     default:
-      return res.status(400).send({ message: 'status_inválido'});
+      return res.status(400).send({ message: "status_inválido" });
   }
 
   try {
+    const date = new Date().toISOString().split("T")[0];
 
-    const date = new Date().toISOString().split('T')[0];
-
-    if(statusRequest === 'concluida')  {
-      await pool.query("UPDATE requests SET status_request=$1 date_conclusion=$2 WHERE id=$3", [
-        statusRequest,
-        date,
-        id,
-      ]);
+    if (statusRequest === "concluida") {
+      await pool.query(
+        "UPDATE requests SET status_request=$1 date_conclusion=$2 WHERE id=$3",
+        [statusRequest, date, id]
+      );
     } else {
-      await pool.query("UPDATE requests SET status_request=$1 date_conclusion=NULL WHERE id=$2", [
-        statusRequest,
-        id,
-      ]);
+      await pool.query(
+        "UPDATE requests SET status_request=$1 date_conclusion=NULL WHERE id=$2",
+        [statusRequest, id]
+      );
     }
 
     return res.status(200).send({
@@ -473,5 +488,5 @@ module.exports = {
   filterRequestsByTitle,
   concludeStatus,
   getRequestByCreation,
-  getRequestByFinish
+  getRequestByFinish,
 };
