@@ -419,7 +419,7 @@ const concludeStatus = async (req, res) => {
   let statusRequest;
   switch (status.toLowerCase()) {
     case "conclued":
-      statusRequest = 'concluída';
+      statusRequest = 'concluida';
       break;
     case "awaiting":
       statusRequest = 'em andamento';
@@ -431,10 +431,22 @@ const concludeStatus = async (req, res) => {
   }
 
   try {
-    await pool.query("UPDATE requests SET status_request=$1 WHERE id=$2", [
-      statusRequest,
-      id,
-    ]);
+
+    const date = new Date().toISOString().split('T')[0];
+
+    if(statusRequest === 'concluida')  {
+      await pool.query("UPDATE requests SET status_request=$1 date_conclusion=$2 WHERE id=$3", [
+        statusRequest,
+        date,
+        id,
+      ]);
+    } else {
+      await pool.query("UPDATE requests SET status_request=$1 date_conclusion=NULL WHERE id=$2", [
+        statusRequest,
+        id,
+      ]);
+    }
+
     return res.status(200).send({
       message: "status alterado com sucesso",
     });
