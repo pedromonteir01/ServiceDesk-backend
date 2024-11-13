@@ -418,6 +418,10 @@ const concludeStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
+  if(!status) {
+    return res.status(400).send({ error: 'status missing' });
+  }
+
   let statusRequest;
   switch (status.toLowerCase()) {
     case "conclued":
@@ -434,18 +438,17 @@ const concludeStatus = async (req, res) => {
 
   try {
 
-    const date = new Date().toISOString().split('T')[0];
-
+    const date = new Date().toISOString().split('T')[0];    
     if(statusRequest === 'concluida')  {
-      await pool.query("UPDATE requests SET status_request=$1 date_conclusion=$2 WHERE id=$3", [
+      await pool.query("UPDATE requests SET status_request=$1, date_conclusion=$2 WHERE id=$3", [
         statusRequest,
         date,
         id,
       ]);
     } else {
-      await pool.query("UPDATE requests SET status_request=$1 date_conclusion=NULL WHERE id=$2", [
+      await pool.query("UPDATE requests SET status_request=$1, date_conclusion=NULL WHERE id=$2", [
         statusRequest,
-        id,
+        id
       ]);
     }
 
@@ -455,7 +458,6 @@ const concludeStatus = async (req, res) => {
   } catch (e) {
     return res.status(500).send({
       error: "Error: " + e,
-      error: "Error in update status",
     });
   }
 };
