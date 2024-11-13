@@ -35,6 +35,7 @@ const uploadToS3 = async ({ file, userId }) => {
     if (!url) {
       throw new Error("Error getting the signed URL");
     }
+    console.log(url);
     return { url };
   } catch (error) {
     console.log(error);
