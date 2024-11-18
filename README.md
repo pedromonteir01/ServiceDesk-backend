@@ -130,32 +130,6 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
   - **Descrição**: Exclui uma solicitação específica baseada no seu ID.
   - **Parâmetro de URL**: `id` - O ID da solicitação.
 
-#### Exemplo de Uso:
-
-- Criar uma nova solicitação (POST):
- 
-  ```bash
-  curl -X POST http://localhost:<PORT>/request \
-    -H "Content-Type: application/json" \
-    -d '{"title": "Ventilador", "image": "http://example.com/imagem1.jpg", "description": "Grade pendurada", "local": "Biblioteca"}'
-  ```
-
-- Atualizar o status de uma solicitação (PUT):
- 
-  ```bash
-  curl -X PUT http://localhost:<PORT>/request/1 \
-    -H "Content-Type: application/json" \
-    -d '{"status": "Concluído"}'
-  ```
-
-- Excluir uma solicitação (DELETE):
-
-  ```bash
-  curl -X DELETE http://localhost:<PORT>/request/1
-  ```
-
----
-
 ### 2. **Rotas de Usuário (`user.routes.js`)**
 
 As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuários na plataforma, permitindo que cada usuário crie uma conta e gerencie apenas as suas solicitações.
@@ -215,38 +189,7 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
   - **Descrição**: Exclui um usuário baseado em seu email.
   - **Parâmetro de URL**: `email` - O email do usuário.
 
-#### Exemplo de Uso:
-
-- Criar um novo usuário (POST):
-
-  ```bash
-  curl -X POST http://localhost:<PORT>/user \
-    -H "Content-Type: application/json" \
-    -d '{"nome": "John Doe", "email": "johndoe@example.com", "password": "senhaSegura123", "isAdmin": "False", "isStudent": "True"}'
-  ```
-
-- Atualizar um usuário existente (PUT):
-
-  ```bash
-  curl -X PUT http://localhost:<PORT>/user/johndoe@example.com \
-    -H "Content-Type: application/json" \
-    -d '{"nome": "Jane Doe"}'
-  ```
-
-- Obter detalhes de um usuário por email (GET):
-
-  ```bash
-  curl http://localhost:<PORT>/user/johndoe@example.com
-  ```
-
-- Excluir um usuário por email (DELETE):
-
-  ```bash
-  curl -X DELETE http://localhost:<PORT>/user/johndoe@example.com
-  ```
-
 ---
-
 ### Observações
 
 - Certifique-se de que o servidor Express está em execução para realizar as requisições.
