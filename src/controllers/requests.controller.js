@@ -464,7 +464,15 @@ const concludeStatus = async (req, res) => {
         id
       ]);
 
-      /* AQUI */
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: "bflowcompany@gmail.com",
+          pass: "wjvr sqme iqti ywiu"
+        }
+      });
 
     } else {
       await pool.query("UPDATE requests SET status_request=$1, date_conclusion=NULL WHERE id=$2", [
