@@ -481,6 +481,13 @@ const concludeStatus = async (req, res) => {
         subject: 'Requisição alterada com sucessso!',
         text: 'test'
       }
+      transporter.sendMail(mailOptions, function(error, info) {
+        if(error) {
+          return res.status(400).send({ error: error });
+        } else {
+          console.log(info.response);
+        }
+      })
 
     } else {
       await pool.query("UPDATE requests SET status_request=$1, date_conclusion=NULL WHERE id=$2", [
