@@ -464,29 +464,7 @@ const concludeStatus = async (req, res) => {
         id
       ]);
 
-      const transporter = nodemailer.createTransport({
-        host: "sandbox.smtp.mailtrap.io",
-        port: 2525,
-        auth: {
-          user: "17d2c81bce0f3f",
-          pass: "b7fc5cae80fa58"
-        }
-      });
-
-      const mailOptions = {
-        from: 'pedrohenriquesilva@aluno.senai.br',
-        to: email,
-        subject: 'Requisição alterada com sucessso!',
-        text: 'test'
-      }
-
-      transporter.sendMail(mailOptions, function(error, info) {
-        if(error) {
-          return res.status(400).send({ error: error });
-        } else {
-          console.log(info.response);
-        }
-      })
+      /* AQUI */
 
     } else {
       await pool.query("UPDATE requests SET status_request=$1, date_conclusion=NULL WHERE id=$2", [
