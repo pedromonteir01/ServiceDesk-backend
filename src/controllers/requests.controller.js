@@ -129,12 +129,12 @@ const getRequestByStatus = async (req, res) => {
 };
 
 const getRequestByCreation = async (req, res) => {
-  const { creation } = req.params;
+  const { creation } = req.params;  
   try {
-    const requests = pool.query(
+    const requests = await pool.query(
       "SELECT * FROM requests WHERE date_request=$1",
       [creation]
-    );
+    );    
 
     if (requests.rowCount > 0) {
       return res.status(200).send({
@@ -156,7 +156,7 @@ const getRequestByCreation = async (req, res) => {
 const getRequestByFinish = async (req, res) => {
   const { finish } = req.params;
   try {
-    const requests = pool.query(
+    const requests = await pool.query(
       "SELECT * FROM requests WHERE date_conclusion=$1",
       [finish]
     );
