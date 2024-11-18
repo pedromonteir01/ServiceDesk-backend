@@ -111,8 +111,8 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
       "nome": "John Doe",
        "email": "johndoe@example.com",
        "password": "senhaSegura123",
-        "isAdmin": "False",
-        "isStudent": "True"
+        "isAdmin": "admin",
+        "isStudent": "student"
     }
     ```
 
