@@ -1,5 +1,6 @@
 const pool = require("../database/database.config");
 const locaisUnicos = require("../models/locals/locals");
+const nodemailer = require('nodemailer');
 const { uploadToS3, getUserPresignedUrls } = require("../s3"); // Importe suas funções de upload e recuperação de URLs
 
 // Função para pegar todas as requisições
@@ -129,12 +130,12 @@ const getRequestByStatus = async (req, res) => {
 };
 
 const getRequestByCreation = async (req, res) => {
-  const { creation } = req.params;  
+  const { creation } = req.params;
   try {
     const requests = await pool.query(
       "SELECT * FROM requests WHERE date_request=$1",
       [creation]
-    );    
+    );
 
     if (requests.rowCount > 0) {
       return res.status(200).send({
@@ -433,9 +434,9 @@ const filterRequestsByTitle = async (req, res) => {
 // Função para concluir uma requisição
 const concludeStatus = async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { status, email } = req.body;
 
-  if(!status) {
+  if (!status) {
     return res.status(400).send({ error: 'status missing' });
   }
 
@@ -455,13 +456,38 @@ const concludeStatus = async (req, res) => {
 
   try {
 
-    const date = new Date().toISOString().split('T')[0];    
-    if(statusRequest === 'concluida')  {
+    const date = new Date().toISOString().split('T')[0];
+    if (statusRequest === 'concluida') {
       await pool.query("UPDATE requests SET status_request=$1, date_conclusion=$2 WHERE id=$3", [
         statusRequest,
         date,
-        id,
+        id
       ]);
+
+      const transporter = nodemailer.createTransport({
+        host: "sandbox.smtp.mailtrap.io",
+        port: 2525,
+        auth: {
+          user: "17d2c81bce0f3f",
+          pass: "b7fc5cae80fa58"
+        }
+      });
+
+      const mailOptions = {
+        from: 'pedrohenriquesilva@aluno.senai.br',
+        to: email,
+        subject: 'Requisição alterada com sucessso!',
+        text: 'test'
+      }
+
+      transporter.sendMail(mailOptions, function(error, info) {
+        if(error) {
+          return res.status(400).send({ error: error });
+        } else {
+          console.log(info.response);
+        }
+      })
+
     } else {
       await pool.query("UPDATE requests SET status_request=$1, date_conclusion=NULL WHERE id=$2", [
         statusRequest,
