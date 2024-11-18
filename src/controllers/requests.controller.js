@@ -457,6 +457,11 @@ const concludeStatus = async (req, res) => {
   try {
 
     const date = new Date().toISOString().split('T')[0];
+
+    const request = (await pool.query('SELECT * FROM requests WHERE id=$1',[id])).rows[0];
+
+    if(!request) return res.status(404).send({ error: 'requisição não encontrada' });
+
     if (statusRequest === 'concluida') {
       await pool.query("UPDATE requests SET status_request=$1, date_conclusion=$2 WHERE id=$3", [
         statusRequest,
@@ -475,11 +480,12 @@ const concludeStatus = async (req, res) => {
       });
 
       const mailOptions = {
-        from: 'pedrohenriquesilva@aluno.senai.br',
+        from: 'bflowcompany@gmail.com',
         to: email,
-        html: `<p>Olá! Teste</p>`,
+        html: `<p>Olá! O aplicativo Service Desk informa que,</p>
+        <p>A solicitação de nº${id} do assunto: "${request.title}" foi finalmente concluída!</p>`,
         subject: 'Requisição alterada com sucessso!',
-        text: 'test'
+        text: `Olá! O aplicativo Service Desk informa que, A solicitação de nº${id} do assunto: "${request.title}" foi finalmente concluída!`
       }
       
       transporter.sendMail(mailOptions, function(error, info) {
