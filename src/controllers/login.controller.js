@@ -21,11 +21,11 @@ const login = async (req, res) => {
 
         const user = (await pool.query('SELECT * FROM users WHERE email=$1', [email])).rows[0];
         if (!user) {
-            return res.status(400).send({ error: 'credenciais inválidas' });
+            return res.status(400).send({ error: 'email não encontrado' });
         }
 
         if (!await bcrypt.compare(password, user.password)) {
-            return res.status(400).send({ error: 'credenciais inválidas' });
+            return res.status(400).send({ error: 'senha inválida' });
         }
 
         const accessToken = generateAccessToken({ email: user.email, isAdmin: user.isadmin });
