@@ -145,8 +145,8 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
         "name": "John Doe",
         "email": "johndoe@example.com",
         "password": "senhaSegura123",
-        "isAdmin": "False",
-        "isStudent": "True"
+        "isAdmin": "admin",
+        "isStudent": "student"
       },
       ...
     ]
@@ -160,8 +160,8 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
       "nome": "John Doe",
       "email": "johndoe@example.com",
       "password": "senhaSegura123",
-      "isAdmin": "False",
-      "isStudent": "True"
+      "isAdmin": "admin",
+      "isStudent": "student"
     }
     ```
   - **Exemplo de Resposta**:
