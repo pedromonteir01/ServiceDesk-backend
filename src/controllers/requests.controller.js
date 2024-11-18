@@ -474,6 +474,14 @@ const concludeStatus = async (req, res) => {
         }
       });
 
+      const mailOptions = {
+        from: 'pedrohenriquesilva@aluno.senai.br',
+        to: email,
+        html: `<p>Olá! Teste</p>`,
+        subject: 'Requisição alterada com sucessso!',
+        text: 'test'
+      }
+
     } else {
       await pool.query("UPDATE requests SET status_request=$1, date_conclusion=NULL WHERE id=$2", [
         statusRequest,
