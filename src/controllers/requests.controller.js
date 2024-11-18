@@ -481,6 +481,7 @@ const concludeStatus = async (req, res) => {
         subject: 'Requisição alterada com sucessso!',
         text: 'test'
       }
+      
       transporter.sendMail(mailOptions, function(error, info) {
         if(error) {
           return res.status(400).send({ error: error });
