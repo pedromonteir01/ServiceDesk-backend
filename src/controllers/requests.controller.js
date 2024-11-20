@@ -308,74 +308,95 @@ const createRequest = async (req, res) => {
 
 // Função para atualizar uma requisição
 const updateRequest = async (req, res) => {
-  let errors = [];
-
   const { id } = req.params;
+
+  let errors = [];
   const {
     title,
-    image,
     description,
     local,
+    image, // Recebendo a imagem como array de bytes
+    imageName, // Nome do arquivo de imagem
+    imageType, // Tipo de imagem
     status_request,
     date_request,
     date_conclusion,
     email,
   } = req.body;
 
-  if (!title || title.length < 6) errors.push("invalid_or_short_name");
+  // Validações de campo
+  if (!title || title.length < 4)
+    errors.push("O título deve ter pelo menos 4 caracteres.");
   if (!description || description.length < 10)
-    errors.push("invalid_or_short_description");
+    errors.push("A descrição deve ter pelo menos 10 caracteres.");
+  if (!local) errors.push("O campo 'local' é obrigatório.");
+  if (!status_request) errors.push("O status da requisição é obrigatório.");
 
+  // Validação e tradução do status_request
   let statusRequest;
   switch (status_request.toLowerCase()) {
     case "conclued":
-      statusRequest = "concluída";
+      statusRequest = "concluida";
       break;
     case "awaiting":
       statusRequest = "em andamento";
       break;
     case "inconclued":
       statusRequest = "aguardando";
+      break;
     default:
-      errors.push("invalid_status");
+      errors.push("Status de requisição inválido.");
       break;
   }
 
-  let dateConclusion = date_conclusion || null;
+  // Retorno de erros de validação
+  if (errors.length > 0) {
+    return res.status(400).json({ errors });
+  }
 
-  const emailRegex =
-    /^[\w-\.]+@(sp\.senai\.br|aluno\.senai\.br|docente\.senai\.br)$/;
-  if (!emailRegex.test(email)) errors.push("invalid_email");
-
-  if (errors.length !== 0) {
-    return res.status(400).send({
-      errors: errors,
-    });
-  } else {
+  // Processo de upload da imagem (se fornecida)
+  let imageUrl = null;
+  if (image) {
     try {
-      await pool.query(
-        "UPDATE requests SET image = $1, description = $2, local = $3, status_request = $4, date_request = $5, date_conclusion = $6, email = $7, title = $8 WHERE id = $9;",
-        [
-          image,
-          description,
-          local,
-          statusRequest,
-          date_request,
-          dateConclusion,
-          email,
-          title,
-          id,
-        ]
-      );
-      return res.status(200).send({
-        message: "Requisição alterada com sucesso",
-      });
-    } catch (e) {
-      console.error("Error: Updating request ", e);
-      return res.status(500).send({
-        error: "Error de servidor",
-      });
+      const buffer = Buffer.from(image);
+      const file = {
+        buffer,
+        originalname: imageName || "imagem.jpg",
+        mimetype: imageType || "image/jpeg",
+      };
+      const { error, url } = await uploadToS3({ file, userId: email });
+
+      if (error) throw new Error(error.message);
+      imageUrl = url;
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ errors: "Erro ao fazer upload da imagem." });
     }
+  }
+
+  // Inserção da nova requisição no banco de dados
+  try {
+    await pool.query(
+      "UPDATE requests SET title=$1, description=$2, local=$3, image=$4, status_request=$5, date_request=$6, date_conclusion=$7, email=$8 WHERE id=$9;",
+      [
+        title,
+        description,
+        local,
+        imageUrl,
+        statusRequest,
+        date_request,
+        date_conclusion,
+        email,
+        id
+      ]
+    );
+    return res.status(201).send({ success: 'Solicitação alterada com sucesso!' });
+  } catch (error) {
+    console.error("Erro de banco de dados:", error);
+    return res
+      .status(500)
+      .json({ errors: "Erro interno do servidor ao salvar a requisição." });
   }
 };
 

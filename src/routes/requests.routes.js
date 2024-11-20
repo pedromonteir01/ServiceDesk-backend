@@ -15,7 +15,7 @@ requestsRouter.get("/creation/:creation", requestsController.getRequestByCreatio
 requestsRouter.get("/finish/:finish", requestsController.getRequestByFinish);
 requestsRouter.get("/user/:email", requestsController.getRequestByUser);
 requestsRouter.post("/", auth, requestsController.createRequest); 
-requestsRouter.put("/:id", requestsController.updateRequest);
+requestsRouter.put("/:id", auth, requestsController.updateRequest);
 requestsRouter.delete("/:id", requestsController.deleteRequest);
 requestsRouter.get("/title/:title", requestsController.filterRequestsByTitle);
 requestsRouter.patch("/status/:id", requestsController.concludeStatus);
