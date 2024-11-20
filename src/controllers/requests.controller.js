@@ -386,7 +386,7 @@ const updateRequest = async (req, res) => {
         imageUrl,
         statusRequest,
         date_request,
-        date_conclusion,
+        null,
         email,
         id
       ]
