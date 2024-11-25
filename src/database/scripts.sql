@@ -19,6 +19,7 @@ CREATE TABLE requests (
   id SERIAL PRIMARY KEY,
   title VARCHAR(35),
   image TEXT,
+  priority VARCHAR(5)
   description TEXT,
   local VARCHAR(255),
   status_request VARCHAR(12),

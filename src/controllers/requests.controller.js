@@ -217,6 +217,7 @@ const createRequest = async (req, res) => {
     status_request,
     date_request,
     date_conclusion,
+    priority,
     email,
   } = req.body;
 
@@ -242,6 +243,22 @@ const createRequest = async (req, res) => {
       break;
     default:
       errors.push("Status de requisição inválido.");
+      break;
+  }
+
+  let priorityForSQL;
+  switch (priority) {
+    case 'high':
+      priorityForSQL = 'alto';
+      break;
+    case 'medium':
+      priorityForSQL = 'médio';
+      break;
+    case 'low':
+      priorityForSQL = 'baixo';
+      break
+    default:
+      errors.push('Prioridade inválida');
       break;
   }
 
@@ -274,7 +291,7 @@ const createRequest = async (req, res) => {
   // Inserção da nova requisição no banco de dados
   try {
     const newRequest = await pool.query(
-      "INSERT INTO requests (title, description, local, image, status_request, date_request, date_conclusion, email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;",
+      "INSERT INTO requests (title, description, local, image, status_request, date_request, date_conclusion, priority, email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;",
       [
         title,
         description,
@@ -283,6 +300,7 @@ const createRequest = async (req, res) => {
         statusRequest,
         date_request,
         null,
+        priorityForSQL,
         email,
       ]
     );
@@ -321,6 +339,7 @@ const updateRequest = async (req, res) => {
     status_request,
     date_request,
     date_conclusion,
+    priority,
     email,
   } = req.body;
 
@@ -346,6 +365,22 @@ const updateRequest = async (req, res) => {
       break;
     default:
       errors.push("Status de requisição inválido.");
+      break;
+  }
+
+  let priorityForSQL;
+  switch (priority) {
+    case 'high':
+      priorityForSQL = 'alto';
+      break;
+    case 'medium':
+      priorityForSQL = 'médio';
+      break;
+    case 'low':
+      priorityForSQL = 'baixo';
+      break
+    default:
+      errors.push('Prioridade inválida');
       break;
   }
 
@@ -378,7 +413,7 @@ const updateRequest = async (req, res) => {
   // Inserção da nova requisição no banco de dados
   try {
     await pool.query(
-      "UPDATE requests SET title=$1, description=$2, local=$3, image=$4, status_request=$5, date_request=$6, date_conclusion=$7, email=$8 WHERE id=$9;",
+      "UPDATE requests SET title=$1, description=$2, local=$3, image=$4, status_request=$5, date_request=$6, date_conclusion=$7, priority=$8, email=$9 WHERE id=$10;",
       [
         title,
         description,
@@ -387,6 +422,7 @@ const updateRequest = async (req, res) => {
         statusRequest,
         date_request,
         null,
+        priorityForSQL,
         email,
         id
       ]
