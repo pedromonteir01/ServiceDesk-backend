@@ -249,13 +249,13 @@ const createRequest = async (req, res) => {
   let priorityForSQL;
   switch (priority) {
     case 'high':
-      priorityForSQL = 'alto';
+      priorityForSQL = 'alta';
       break;
     case 'medium':
-      priorityForSQL = 'médio';
+      priorityForSQL = 'média';
       break;
     case 'low':
-      priorityForSQL = 'baixo';
+      priorityForSQL = 'baixa';
       break
     default:
       errors.push('Prioridade inválida');
@@ -321,6 +321,7 @@ const createRequest = async (req, res) => {
 //   "status_request": "conclued",
 //   "date_request": "2021-10-10",
 //   "date_conclusion": "2021-10-10",
+//   "priority": "high"
 //   "email": ""
 // }
 
@@ -371,13 +372,13 @@ const updateRequest = async (req, res) => {
   let priorityForSQL;
   switch (priority) {
     case 'high':
-      priorityForSQL = 'alto';
+      priorityForSQL = 'alta';
       break;
     case 'medium':
-      priorityForSQL = 'médio';
+      priorityForSQL = 'média';
       break;
     case 'low':
-      priorityForSQL = 'baixo';
+      priorityForSQL = 'baixa';
       break
     default:
       errors.push('Prioridade inválida');

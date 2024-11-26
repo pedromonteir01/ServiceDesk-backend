@@ -1,8 +1,9 @@
 const { Router } = require('express');
-const getDataController = require('../controllers/data.controller');
+const { getLocalsWithRequests, getDataFromRequests, } = require('../controllers/data.controller');
 
 const dataRouter = Router();
 
-dataRouter.get('/', getDataController.getLocalsWithRequests);
+dataRouter.get('/', getLocalsWithRequests);
+dataRouter.get('/requests_data', getDataFromRequests);
 
 module.exports = dataRouter;
