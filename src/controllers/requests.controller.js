@@ -337,6 +337,7 @@ const updateRequest = async (req, res) => {
     image, // Recebendo a imagem como array de bytes
     imageName, // Nome do arquivo de imagem
     imageType, // Tipo de imagem
+    imageBoolean,
     status_request,
     date_request,
     date_conclusion,
@@ -392,6 +393,7 @@ const updateRequest = async (req, res) => {
 
   // Processo de upload da imagem (se fornecida)
   let imageUrl = null;
+  if (imageBoolean === false) {
   if (image) {
     try {
       const buffer = Buffer.from(image);
@@ -410,7 +412,9 @@ const updateRequest = async (req, res) => {
         .json({ errors: "Erro ao fazer upload da imagem." });
     }
   }
-
+} else {
+  imageUrl = image;
+}
   // Inserção da nova requisição no banco de dados
   try {
     await pool.query(
