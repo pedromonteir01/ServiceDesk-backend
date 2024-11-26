@@ -39,7 +39,7 @@ FROM
     if(!response.rowCount) {
         return res.status(404).send({ error: 'Não foram encontradas solicitações' });
     } else {
-        return res.status(200).send( response.rows );
+        return res.status(200).send(response.rows[0]);
     }
 
     } catch (e) {
