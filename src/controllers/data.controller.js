@@ -23,7 +23,7 @@ SELECT
     COUNT(*) FILTER (WHERE date_trunc('month', date_request) = date_trunc('month', CURRENT_DATE)) AS reqs_this_month,
     COUNT(*) FILTER (
         WHERE date_trunc('month', date_request) = date_trunc('month', CURRENT_DATE)
-        AND status_request = 'conclued'
+        AND status_request = 'concluida'
     ) AS attended_reqs_this_month,
     TO_CHAR(CURRENT_DATE - INTERVAL '1 month', 'YYYY-MM') AS last_month,
     COUNT(*) FILTER (WHERE date_trunc('month', date_request) = date_trunc('month', CURRENT_DATE - INTERVAL '1 month')) AS reqs_last_month,
@@ -36,11 +36,11 @@ FROM
 
             `);
 
-    if(!response.rowCount) {
-        return res.status(404).send({ error: 'Não foram encontradas solicitações' });
-    } else {
-        return res.status(200).send(response.rows[0]);
-    }
+        if (!response.rowCount) {
+            return res.status(404).send({ error: 'Não foram encontradas solicitações' });
+        } else {
+            return res.status(200).send(response.rows[0]);
+        }
 
     } catch (e) {
         return res.status(500).send({

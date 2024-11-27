@@ -204,6 +204,42 @@ const getRequestByUser = async (req, res) => {
   }
 };
 
+const getRequestsByPriority = async(req, res) => {
+  const { priority } = req.params;
+
+  let priorityForSQL;
+  switch (priority) {
+    case 'high':
+      priorityForSQL = 'alta';
+      break;
+    case 'medium':
+      priorityForSQL = 'média';
+      break;
+    case 'low':
+      priorityForSQL = 'baixa';
+      break
+    default:
+      errors.push('Prioridade inválida');
+      break;
+  }
+
+
+  try {
+    const response = await pool.query('SELECT * FROM requests WHERE priority=$1', [priorityForSQL]);
+    if(response.rowCount === 0) {
+      return res.status(404).send({
+        error: "Não há requisições com esta prioridade"
+      });
+    } else {
+      return res.status(200).send(response.rows);
+    }
+  } catch(e) {
+    return res.status(500).send({
+      error: "Error de servidor",
+    });
+  }
+};
+
 // Função para criar uma requisição
 const createRequest = async (req, res) => {
   let errors = [];
@@ -585,4 +621,5 @@ module.exports = {
   concludeStatus,
   getRequestByCreation,
   getRequestByFinish,
+  getRequestsByPriority
 };
