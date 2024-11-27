@@ -5,7 +5,7 @@ const crypto = require("crypto");
 const special = ["!", "@", "#", "$", "%", "&", "*", "(", ")", "/", "?", "|"];
 const number = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const upper = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-const lower = [ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+const lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
 const getAllUsers = async (req, res) => {
   try {
@@ -127,7 +127,7 @@ const createUser = async (req, res) => {
   const { name, email, password, isAdmin, isStudent } = req.body;
 
   if (!name || !email || !password || !isAdmin || !isStudent) {
-    return false;
+    return res.status(400).send({ error: 'Preencha todos os campos' });
   }
 
   if (typeof name !== "string") {
@@ -228,8 +228,8 @@ const updateUser = async (req, res) => {
   //body para criar elementos
   const { name, email, password, isAdmin, isStudent } = req.body;
 
-  if (!name || !email || !password || !isAdmin || !isStudent || !emailAux) {
-    return false;
+  if (!name || !email || !password || !isAdmin || !isStudent) {
+    return res.status(400).send({ error: 'Preencha todos os campos' });
   }
 
   if (typeof name !== "string") {

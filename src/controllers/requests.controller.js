@@ -257,6 +257,10 @@ const createRequest = async (req, res) => {
     email,
   } = req.body;
 
+  if(!title || !description || !local || !image || !imageName || !imageType || !statusRequest || !date_request || !priority || !email) {
+    return res.status(400).send({ error: 'Preencha todos os campos' });
+  }
+
   // Validações de campo
   if (!title || title.length < 4)
     errors.push("O título deve ter pelo menos 4 caracteres.");
@@ -380,6 +384,10 @@ const updateRequest = async (req, res) => {
     priority,
     email,
   } = req.body;
+
+  if(!title || !description || !local || !image || !imageName || !imageType || !statusRequest || !date_request || !priority || !email) {
+    return res.status(400).send({ error: 'Preencha todos os campos' });
+  }
 
   // Validações de campo
   if (!title || title.length < 4)
