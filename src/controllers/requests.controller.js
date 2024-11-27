@@ -231,7 +231,7 @@ const getRequestsByPriority = async(req, res) => {
         error: "Não há requisições com esta prioridade"
       });
     } else {
-      return res.status(200).send(response.rows);
+      return res.status(200).send({ quantity: response.rowCount, requests: response.rows });
     }
   } catch(e) {
     return res.status(500).send({
