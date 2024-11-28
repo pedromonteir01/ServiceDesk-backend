@@ -142,186 +142,188 @@ Descrição: Retorna todas as solicitações com um status específico.
 Parâmetro: pode ser conclued, awaiting ou inconclued.
 Exemplo de Resposta:
 ``` json
-{
-  "results": 1,
-  "requests": [
     {
-      "id": 1,
-      "title": "Ventilador",
-      "image": "http://example.com/imagem1.jpg",
-      "description": "Grade pendurada",
-      "local": "Biblioteca",
-      "status_request": "Em andamento",
-      "date_request": "2024-11-28",
-      "date_conclusion": null,
-      "priority": "média",
-      "email": "johndoe@example.com"
+      "results": 1,
+      "requests": [
+        {
+          "id": 1,
+          "title": "Ventilador",
+          "image": "http://example.com/imagem1.jpg",
+          "description": "Grade pendurada",
+          "local": "Biblioteca",
+          "status_request": "Em andamento",
+          "date_request": "2024-11-28",
+          "date_conclusion": null,
+          "priority": "média",
+          "email": "johndoe@example.com"
+        }
+      ]
     }
-  ]
-}
 ```
 GET /request/date/creation/:creation
 Descrição: Retorna todas as solicitações criadas em uma data específica.
 Parâmetro:
 creation: Data no formato YYYY-MM-DD.
 Exemplo de Resposta:
-json
-Copiar código
-{
-  "results": 1,
-  "requests": [
+``` json
     {
-      "id": 1,
-      "title": "Ventilador",
-      "image": "http://example.com/imagem1.jpg",
-      "description": "Grade pendurada",
-      "local": "Biblioteca",
-      "status_request": "Em andamento",
-      "date_request": "2024-11-28",
-      "date_conclusion": null,
-      "priority": "média",
-      "email": "johndoe@example.com"
+      "results": 1,
+      "requests": [
+        {
+          "id": 1,
+          "title": "Ventilador",
+          "image": "http://example.com/imagem1.jpg",
+          "description": "Grade pendurada",
+          "local": "Biblioteca",
+          "status_request": "Em andamento",
+          "date_request": "2024-11-28",
+          "date_conclusion": null,
+          "priority": "média",
+          "email": "johndoe@example.com"
+        }
+      ]
     }
-  ]
-}
+```
 GET /request/date/finish/:finish
 Descrição: Retorna todas as solicitações concluídas em uma data específica.
 Parâmetro:
 finish: Data no formato YYYY-MM-DD.
 Exemplo de Resposta:
-json
-Copiar código
-{
-  "results": 1,
-  "requests": [
+``` json
     {
-      "id": 1,
-      "title": "Ventilador",
-      "image": "http://example.com/imagem1.jpg",
-      "description": "Grade pendurada",
-      "local": "Biblioteca",
-      "status_request": "Concluído",
-      "date_request": "2024-11-28",
-      "date_conclusion": "2024-11-29",
-      "priority": "média",
-      "email": "johndoe@example.com"
+      "results": 1,
+      "requests": [
+        {
+          "id": 1,
+          "title": "Ventilador",
+          "image": "http://example.com/imagem1.jpg",
+          "description": "Grade pendurada",
+          "local": "Biblioteca",
+          "status_request": "Concluído",
+          "date_request": "2024-11-28",
+          "date_conclusion": "2024-11-29",
+          "priority": "média",
+          "email": "johndoe@example.com"
+        }
+      ]
     }
-  ]
-}
+```
 GET /request/priority/:priority
 Descrição: Retorna todas as solicitações de acordo com a prioridade.
 Parâmetro:
 priority: Pode ser high, medium ou low.
 Exemplo de Resposta:
-json
-Copiar código
-{
-  "results": 2,
-  "requests": [
+``` json
     {
-      "id": 1,
-      "title": "Ventilador",
-      "image": "http://example.com/imagem1.jpg",
-      "description": "Grade pendurada",
-      "local": "Biblioteca",
-      "status_request": "Concluído",
-      "date_request": "2024-11-28",
-      "date_conclusion": "2024-11-29",
-      "priority": "alta",
-      "email": "johndoe@example.com"
-    },
-    ...
-  ]
-}
+      "results": 2,
+      "requests": [
+        {
+          "id": 1,
+          "title": "Ventilador",
+          "image": "http://example.com/imagem1.jpg",
+          "description": "Grade pendurada",
+          "local": "Biblioteca",
+          "status_request": "Concluído",
+          "date_request": "2024-11-28",
+          "date_conclusion": "2024-11-29",
+          "priority": "alta",
+          "email": "johndoe@example.com"
+        },
+        ...
+      ]
+    }
+```
 GET /request/user/:email
 Descrição: Retorna todas as solicitações criadas por um usuário específico.
 Parâmetro:
 email: Email do usuário.
 Exemplo de Resposta:
-json
-Copiar código
-{
-  "results": 1,
-  "requests": [
+``` json
     {
-      "id": 1,
-      "title": "Ventilador",
-      "image": "http://example.com/imagem1.jpg",
-      "description": "Grade pendurada",
-      "local": "Biblioteca",
-      "status_request": "Concluído",
-      "date_request": "2024-11-28",
-      "date_conclusion": "2024-11-29",
-      "priority": "alta",
-      "email": "johndoe@example.com"
+      "results": 1,
+      "requests": [
+        {
+          "id": 1,
+          "title": "Ventilador",
+          "image": "http://example.com/imagem1.jpg",
+          "description": "Grade pendurada",
+          "local": "Biblioteca",
+          "status_request": "Concluído",
+          "date_request": "2024-11-28",
+          "date_conclusion": "2024-11-29",
+          "priority": "alta",
+          "email": "johndoe@example.com"
+        }
+      ]
     }
-  ]
-}
+```
 POST /request
 Descrição: Cria uma nova solicitação de manutenção.
 Body:
-json
-Copiar código
-{
-  "title": "Ventilador quebrado",
-  "description": "O ventilador da biblioteca está com a grade pendurada",
-  "local": "Biblioteca",
-  "image": [137, 80, 78, ..., 11], // buffer da imagem
-  "imageName": "ventilador.png",
-  "imageType": "image/png",
-  "status_request": "inconclued",
-  "date_request": "2024-11-28",
-  "priority": "medium",
-  "email": "johndoe@example.com"
-}
+``` json
+    {
+      "title": "Ventilador quebrado",
+      "description": "O ventilador da biblioteca está com a grade pendurada",
+      "local": "Biblioteca",
+      "image": [137, 80, 78, ..., 11], // buffer da imagem
+      "imageName": "ventilador.png",
+      "imageType": "image/png",
+      "status_request": "inconclued",
+      "date_request": "2024-11-28",
+      "priority": "medium",
+      "email": "johndoe@example.com"
+    }
+```
 Exemplo de Resposta:
-json
-Copiar código
-{
-  "id": 1,
-  "title": "Ventilador quebrado",
-  "image": "http://example.com/imagem.jpg",
-  "priority": "média",
-  "description": "O ventilador da biblioteca está com a grade pendurada",
-  "local": "Biblioteca",
-  "status_request": "aguardando",
-  "date_request": "2024-11-28",
-  "date_conclusion": null,
-  "email": "johndoe@example.com"
-}
+``` json
+    {
+      "id": 1,
+      "title": "Ventilador quebrado",
+      "image": "http://example.com/imagem.jpg",
+      "priority": "média",
+      "description": "O ventilador da biblioteca está com a grade pendurada",
+      "local": "Biblioteca",
+      "status_request": "aguardando",
+      "date_request": "2024-11-28",
+      "date_conclusion": null,
+      "email": "johndoe@example.com"
+    }
+```
+
 PUT /request/:id
 Descrição: Atualiza as informações de uma solicitação existente.
 Parâmetros:
 id: ID da solicitação a ser atualizada.
 Body:
-json
-Copiar código
-{
-  "title": "Ventilador reparado",
-  "description": "Grade foi consertada",
-  "local": "Biblioteca",
-  "status_request": "conclued",
-  "date_request": "2024-11-28",
-  "date_conclusion": "2024-11-30",
-  "priority": "medium",
-  "email": "johndoe@example.com"
-}
+```json
+    {
+      "title": "Ventilador reparado",
+      "description": "Grade foi consertada",
+      "local": "Biblioteca",
+      "status_request": "conclued",
+      "date_request": "2024-11-28",
+      "date_conclusion": "2024-11-30",
+      "priority": "medium",
+      "email": "johndoe@example.com"
+    }
+```
 Exemplo de Resposta:
-json
-Copiar código
+``` json
 {
   "success": "Solicitação alterada com sucesso!"
 }
+```
+
 DELETE /request/:id
 Descrição: Remove uma solicitação com base no ID.
 Parâmetro:
 id: ID da solicitação.
-Exemplo de Resposta:
-json
-Copiar código
+``` json
 {
   "message": "Request deleted"
 }
+```
+
 
 ### 2. **Rotas de Usuário (`user.routes.js`)**
 
