@@ -57,6 +57,27 @@ Para funcionamento total do projeto contamos com o uso de bibliotecas que facili
 - [x] [JWT (JSON Web Token)](https://www.npmjs.com/package/jsonwebtoken)
 - Gera Tokens para login de usuários
 
+- [x] [AWS Client](https://www.npmjs.com/package/@aws-sdk/client-s3)
+- Para realizar requisições a AWS
+
+- [x] [AWS Presigner](https://www.npmjs.com/package/@aws-sdk/s3-request-presigner/v/1.0.0-rc.3)
+- Gera URL válida para a AWS
+
+- [x] [bcryptjs](https://www.npmjs.com/package/bcryptjs)
+- Gera um código seguro e único para validações
+
+- [x] [CORS](https://www.npmjs.com/package/cors)
+- Habilita o middleware cors para o Express
+
+- [X] [Multer](https://www.npmjs.com/package/multer)
+- Realiza envio de arquivos em NODE
+
+- [X] [Nodemailer](https://www.npmjs.com/package/nodemailer)
+- Permite envio de e-mail para os usuários sem um servidor SMTP, utilizando o NODE
+
+- [X] [uuid](https://www.npmjs.com/package/uuid]
+- Gera um código identificador único 
+
 
 # Documentação das Rotas da API - Service Desk
 
@@ -74,7 +95,8 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
   - **Descrição**: Retorna uma lista de todas as solicitações de manutenção cadastradas.
   - **Exemplo de Resposta**: 
     ```json
-    [
+    quantity: 2,
+    requests: [
       {
         "id": 1,
         "title": "Ventilador",
@@ -82,8 +104,8 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
         "description": "Grade pendurada",
         "local": "Biblioteca",
         "status_request": "Em andamento",
-        "date_request": "04/08/2024",
-        "date_conclusion": "null",
+        "date_request": "2024-11-28",
+        "date_conclusion": "2024-11-28",
         "email": "johndoe@example.com" 
       },
       ...
@@ -93,28 +115,36 @@ As rotas de solicitação permitem o envio e gerenciamento de reportes de monume
 - **POST `/request`**
   - **Descrição**: Cria uma nova solicitação de manutenção com base nas informações fornecidas pelo usuário, incluindo uma imagem do monumento quebrado.
   - **Dados de Exemplo (Body)**: 
-    ```json
-    {
-     "title": "Ventilador",
-    "image": "http://example.com/imagem1.jpg",
-    "description": "Grade pendurada",
-    "local": "Biblioteca",
-    "status_request": "Em andamento",
-    "date_request": "04/08/2024",
-    "date_conclusion": "null",
-    "email": "johndoe@example.com"
-    }
-    ```
-  - **Exemplo de Resposta**: 
-    ```json
-    {
-      "nome": "John Doe",
-       "email": "johndoe@example.com",
-       "password": "senhaSegura123",
-        "isAdmin": "admin",
-        "isStudent": "student"
-    }
-    ```
+```json
+{
+  title: 'TESTE',
+  description: 'Ventilador quebrado',
+  local: 'Banheiros e Limpeza',
+  image: [137,  80,  78, ..., 11] //buffer,
+  imageName: "bathroom.png",
+  imageType: 'image/png',
+  status_request: 'inconclued',
+  date_request: '2024-11-28T22:46:48.680Z',
+  date_conclusion: null,
+  priority: 'medium',
+  email: 'pedrohenriquesilva@aluno.senai.br'
+}
+```
+  - **Exemplo de Resposta**:
+```json
+{
+  id: 1,
+  title: 'TESTE',
+  image: 'link AWS',
+  priority: 'média',
+  description: 'Ventilador quebrado',
+  local: 'Banheiros e Limpeza',
+  status_request: 'aguardando',
+  date_request: '2024-11-28T03:00:00.000Z',
+  date_conclusion: null,
+  email: 'pedrohenriquesilva@aluno.senai.br'
+}
+```
 
 - **PUT `/request/:id`**
   - **Descrição**: Atualiza o status de uma solicitação existente (por exemplo, de "Em andamento" para "Concluído").
