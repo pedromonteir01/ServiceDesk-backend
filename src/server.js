@@ -24,3 +24,5 @@ app.use("/", indexRoutes);
 app.listen(port, () =>
   console.log(`⚡ Server started on http://localhost:${port}`)
 );
+
+module.exports = app;
