@@ -281,6 +281,29 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
       ...
     ]
     ```
+- #### **GET `/user/name/:name`**  
+- **Descrição**: Retorna todos os usuários cujo nome contém o valor fornecido.  
+- **Parâmetro**:  
+  - `name`: Parte do nome a ser pesquisada.  
+- **Exemplo de Resposta (Sucesso)**:
+  ```json
+  {
+    "results": 2,
+    "users": [
+      {
+        "name": "User 1",
+        "email": "user@aluno.senai.br",
+        "isStudent": true
+      },
+      {
+        "name": "User 2",
+        "email": "user@aluno.senai.br",
+        "isStudent": false
+      }
+    ]
+  }
+
+  
 
 - **POST `/user`**  
   - **Descrição**: Cria um novo usuário.  
