@@ -108,7 +108,7 @@ Exemplo de Resposta:
         "date_request": "2024-11-28",
         "date_conclusion": null,
         "priority": "média",
-        "email": "johndoe@example.com"
+        "email": "user@aluno.senai.br"
       },
       ...
     ]
@@ -132,7 +132,7 @@ Exemplo de Resposta:
           "date_request": "2024-11-28",
           "date_conclusion": null,
           "priority": "média",
-          "email": "johndoe@example.com"
+          "email": "user@aluno.senai.br"
         }
       ]
     }
@@ -155,7 +155,7 @@ Exemplo de Resposta:
           "date_request": "2024-11-28",
           "date_conclusion": null,
           "priority": "média",
-          "email": "johndoe@example.com"
+          "email": "user@aluno.senai.br"
         }
       ]
     }
@@ -179,7 +179,7 @@ Exemplo de Resposta:
           "date_request": "2024-11-28",
           "date_conclusion": null,
           "priority": "média",
-          "email": "johndoe@example.com"
+          "email": "user@aluno.senai.br"
         }
       ]
     }
@@ -203,7 +203,7 @@ Exemplo de Resposta:
           "date_request": "2024-11-28",
           "date_conclusion": "2024-11-29",
           "priority": "média",
-          "email": "johndoe@example.com"
+          "email": "user@aluno.senai.br"
         }
       ]
     }
@@ -227,7 +227,7 @@ Exemplo de Resposta:
           "date_request": "2024-11-28",
           "date_conclusion": "2024-11-29",
           "priority": "alta",
-          "email": "johndoe@example.com"
+          "email": "user@aluno.senai.br"
         },
         ...
       ]
@@ -252,7 +252,7 @@ Exemplo de Resposta:
           "date_request": "2024-11-28",
           "date_conclusion": "2024-11-29",
           "priority": "alta",
-          "email": "johndoe@example.com"
+          "email": "user@aluno.senai.br"
         }
       ]
     }
@@ -270,8 +270,8 @@ Body:
       "imageType": "image/png",
       "status_request": "inconclued",
       "date_request": "2024-11-28",
-      "priority": "medium",
-      "email": "johndoe@example.com"
+      "priority": "alta",
+      "email": "user@aluno.senai.br"
     }
 ```
 Exemplo de Resposta:
@@ -286,7 +286,7 @@ Exemplo de Resposta:
       "status_request": "aguardando",
       "date_request": "2024-11-28",
       "date_conclusion": null,
-      "email": "johndoe@example.com"
+      "email": "user@aluno.senai.br"
     }
 ```
 
@@ -303,8 +303,8 @@ Body:
       "status_request": "conclued",
       "date_request": "2024-11-28",
       "date_conclusion": "2024-11-30",
-      "priority": "medium",
-      "email": "johndoe@example.com"
+      "priority": "média",
+      "email": "user@aluno.senai.br"
     }
 ```
 Exemplo de Resposta:
@@ -337,9 +337,9 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
     ```json
     [
       {
-        "name": "John Doe",
-        "email": "johndoe@example.com",
-        "password": "senhaSegura123",
+        "name": "User Example",
+        "email": "user@aluno.senai.br",
+        "password": "senhaSegura123!",
         "isAdmin": "admin",
         "isStudent": "student"
       },
@@ -352,9 +352,9 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
   - **Dados de Exemplo (Body)**: 
     ```json
     {
-      "nome": "John Doe",
-      "email": "johndoe@example.com",
-      "password": "senhaSegura123",
+      "nome": "User Example",
+      "email": "user@aluno.senai.br",
+      "password": "senhaSegura123!",
       "isAdmin": "admin",
       "isStudent": "student"
     }
@@ -372,7 +372,7 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
   - **Dados de Exemplo (Body)**:
     ```json
     {
-      "name": "Jane Doe"
+      "name": "User Example PUT"
     }
     ```
 
