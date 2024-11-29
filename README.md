@@ -79,141 +79,24 @@ Para funcionamento total do projeto contamos com o uso de bibliotecas que facili
 - Gera um código identificador único 
 
 
-# Documentação das Rotas da API - Service Desk
+# **Documentação das Rotas da API - Service Desk**
 
-Este projeto consiste em uma API para gerenciar usuários e solicitações de manutenção de patrimônios escolar quebrados, desenvolvida com **Express.js**. Usuários podem criar contas, enviar fotos e descrever problemas encontrados na rede SENAI.
+Este projeto consiste em uma API desenvolvida com **Express.js** para gerenciar usuários e solicitações de manutenção de patrimônios escolares quebrados. Usuários podem criar contas, enviar fotos e descrever problemas encontrados na rede SENAI.
 
-## Estrutura de Rotas
+---
 
-### 1. **Rotas de Solicitação (`request.routes.js`)**
+## **Estrutura de Rotas**
 
-As rotas de solicitação permitem o envio e gerenciamento de reportes de monumentos quebrados na escola.
+### **1. Rotas de Solicitação (`request.routes.js`)**
 
-#### Endpoints:
+As rotas de solicitação permitem o envio e gerenciamento de reportes de patrimônios quebrados na escola.
 
-GET /request/
-Descrição: Retorna todas as solicitações de manutenção cadastradas.
-Exemplo de Resposta:
-  ``` json
-  {
-    "results": 2,
-    "requests": [
-      {
-        "id": 1,
-        "title": "Ventilador",
-        "image": "http://example.com/imagem1.jpg",
-        "description": "Grade pendurada",
-        "local": "Biblioteca",
-        "status_request": "Em andamento",
-        "date_request": "2024-11-28",
-        "date_conclusion": null,
-        "priority": "média",
-        "email": "user@aluno.senai.br"
-      },
-      ...
-    ]
-  }
-  ```
-GET /request/local/:local
-Descrição: Retorna todas as solicitações para um local específico.
-Parâmetro: nome do local.
-Exemplo de Resposta:
-``` json
-    {
-      "results": 1,
-      "requests": [
-        {
-          "id": 1,
-          "title": "Ventilador",
-          "image": "http://example.com/imagem1.jpg",
-          "description": "Grade pendurada",
-          "local": "Biblioteca",
-          "status_request": "Em andamento",
-          "date_request": "2024-11-28",
-          "date_conclusion": null,
-          "priority": "média",
-          "email": "user@aluno.senai.br"
-        }
-      ]
-    }
-```
-GET /request/status/:status
-Descrição: Retorna todas as solicitações com um status específico.
-Parâmetro: pode ser conclued, awaiting ou inconclued.
-Exemplo de Resposta:
-``` json
-    {
-      "results": 1,
-      "requests": [
-        {
-          "id": 1,
-          "title": "Ventilador",
-          "image": "http://example.com/imagem1.jpg",
-          "description": "Grade pendurada",
-          "local": "Biblioteca",
-          "status_request": "Em andamento",
-          "date_request": "2024-11-28",
-          "date_conclusion": null,
-          "priority": "média",
-          "email": "user@aluno.senai.br"
-        }
-      ]
-    }
-```
-GET /request/date/creation/:creation
-Descrição: Retorna todas as solicitações criadas em uma data específica.
-Parâmetro:
-creation: Data no formato YYYY-MM-DD.
-Exemplo de Resposta:
-``` json
-    {
-      "results": 1,
-      "requests": [
-        {
-          "id": 1,
-          "title": "Ventilador",
-          "image": "http://example.com/imagem1.jpg",
-          "description": "Grade pendurada",
-          "local": "Biblioteca",
-          "status_request": "Em andamento",
-          "date_request": "2024-11-28",
-          "date_conclusion": null,
-          "priority": "média",
-          "email": "user@aluno.senai.br"
-        }
-      ]
-    }
-```
-GET /request/date/finish/:finish
-Descrição: Retorna todas as solicitações concluídas em uma data específica.
-Parâmetro:
-finish: Data no formato YYYY-MM-DD.
-Exemplo de Resposta:
-``` json
-    {
-      "results": 1,
-      "requests": [
-        {
-          "id": 1,
-          "title": "Ventilador",
-          "image": "http://example.com/imagem1.jpg",
-          "description": "Grade pendurada",
-          "local": "Biblioteca",
-          "status_request": "Concluído",
-          "date_request": "2024-11-28",
-          "date_conclusion": "2024-11-29",
-          "priority": "média",
-          "email": "user@aluno.senai.br"
-        }
-      ]
-    }
-```
-GET /request/priority/:priority
-Descrição: Retorna todas as solicitações de acordo com a prioridade.
-Parâmetro:
-priority: Pode ser high, medium ou low.
-Exemplo de Resposta:
-``` json
+#### **Endpoints**
+
+- **GET `/request/`**  
+  - **Descrição**: Retorna todas as solicitações de manutenção cadastradas.  
+  - **Exemplo de Resposta**:
+    ```json
     {
       "results": 2,
       "requests": [
@@ -223,22 +106,22 @@ Exemplo de Resposta:
           "image": "http://example.com/imagem1.jpg",
           "description": "Grade pendurada",
           "local": "Biblioteca",
-          "status_request": "Concluído",
+          "status_request": "Em andamento",
           "date_request": "2024-11-28",
-          "date_conclusion": "2024-11-29",
-          "priority": "alta",
+          "date_conclusion": null,
+          "priority": "média",
           "email": "user@aluno.senai.br"
         },
         ...
       ]
     }
-```
-GET /request/user/:email
-Descrição: Retorna todas as solicitações criadas por um usuário específico.
-Parâmetro:
-email: Email do usuário.
-Exemplo de Resposta:
-``` json
+    ```
+
+- **GET `/request/local/:local`**  
+  - **Descrição**: Retorna todas as solicitações para um local específico.  
+  - **Parâmetro**: Nome do local.  
+  - **Exemplo de Resposta**:
+    ```json
     {
       "results": 1,
       "requests": [
@@ -248,34 +131,84 @@ Exemplo de Resposta:
           "image": "http://example.com/imagem1.jpg",
           "description": "Grade pendurada",
           "local": "Biblioteca",
-          "status_request": "Concluído",
+          "status_request": "Em andamento",
           "date_request": "2024-11-28",
-          "date_conclusion": "2024-11-29",
-          "priority": "alta",
+          "date_conclusion": null,
+          "priority": "média",
           "email": "user@aluno.senai.br"
         }
       ]
     }
-```
-POST /request
-Descrição: Cria uma nova solicitação de manutenção.
-Body:
-``` json
+    ```
+
+- **GET `/request/status/:status`**  
+  - **Descrição**: Retorna todas as solicitações com um status específico.  
+  - **Parâmetro**: Pode ser `concluded`, `awaiting` ou `inconcluded`.  
+  - **Exemplo de Resposta**:
+    ```json
+    {
+      "results": 1,
+      "requests": [
+        {
+          "id": 1,
+          "title": "Ventilador",
+          "image": "http://example.com/imagem1.jpg",
+          "description": "Grade pendurada",
+          "local": "Biblioteca",
+          "status_request": "Em andamento",
+          "date_request": "2024-11-28",
+          "date_conclusion": null,
+          "priority": "média",
+          "email": "user@aluno.senai.br"
+        }
+      ]
+    }
+    ```
+
+- **GET `/request/date/creation/:creation`**  
+  - **Descrição**: Retorna todas as solicitações criadas em uma data específica.  
+  - **Parâmetro**:  
+    - `creation`: Data no formato `YYYY-MM-DD`.  
+  - **Exemplo de Resposta**:
+    ```json
+    {
+      "results": 1,
+      "requests": [
+        {
+          "id": 1,
+          "title": "Ventilador",
+          "image": "http://example.com/imagem1.jpg",
+          "description": "Grade pendurada",
+          "local": "Biblioteca",
+          "status_request": "Em andamento",
+          "date_request": "2024-11-28",
+          "date_conclusion": null,
+          "priority": "média",
+          "email": "user@aluno.senai.br"
+        }
+      ]
+    }
+    ```
+
+- **POST `/request`**  
+  - **Descrição**: Cria uma nova solicitação de manutenção.  
+  - **Body**:
+    ```json
     {
       "title": "Ventilador quebrado",
       "description": "O ventilador da biblioteca está com a grade pendurada",
       "local": "Biblioteca",
-      "image": [137, 80, 78, ..., 11], // buffer da imagem
+      "image": [137, 80, 78, ..., 11],
       "imageName": "ventilador.png",
       "imageType": "image/png",
-      "status_request": "inconclued",
+      "status_request": "inconcluded",
       "date_request": "2024-11-28",
       "priority": "alta",
       "email": "user@aluno.senai.br"
     }
-```
-Exemplo de Resposta:
-``` json
+    ```
+  - **Exemplo de Resposta**:
+    ```json
     {
       "id": 1,
       "title": "Ventilador quebrado",
@@ -288,52 +221,54 @@ Exemplo de Resposta:
       "date_conclusion": null,
       "email": "user@aluno.senai.br"
     }
-```
+    ```
 
-PUT /request/:id
-Descrição: Atualiza as informações de uma solicitação existente.
-Parâmetros:
-id: ID da solicitação a ser atualizada.
-Body:
-```json
+- **PUT `/request/:id`**  
+  - **Descrição**: Atualiza as informações de uma solicitação existente.  
+  - **Parâmetro**:  
+    - `id`: ID da solicitação a ser atualizada.  
+  - **Body**:
+    ```json
     {
       "title": "Ventilador reparado",
       "description": "Grade foi consertada",
       "local": "Biblioteca",
-      "status_request": "conclued",
+      "status_request": "concluded",
       "date_request": "2024-11-28",
       "date_conclusion": "2024-11-30",
       "priority": "média",
       "email": "user@aluno.senai.br"
     }
-```
-Exemplo de Resposta:
-``` json
-{
-  "success": "Solicitação alterada com sucesso!"
-}
-```
+    ```
+  - **Exemplo de Resposta**:
+    ```json
+    {
+      "success": "Solicitação alterada com sucesso!"
+    }
+    ```
 
-DELETE /request/:id
-Descrição: Remove uma solicitação com base no ID.
-Parâmetro:
-id: ID da solicitação.
-``` json
-{
-  "message": "Request deleted"
-}
-```
+- **DELETE `/request/:id`**  
+  - **Descrição**: Remove uma solicitação com base no ID.  
+  - **Parâmetro**:  
+    - `id`: ID da solicitação.  
+  - **Exemplo de Resposta**:
+    ```json
+    {
+      "message": "Request deleted"
+    }
+    ```
 
+---
 
-### 2. **Rotas de Usuário (`user.routes.js`)**
+### **2. Rotas de Usuário (`user.routes.js`)**
 
 As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuários na plataforma, permitindo que cada usuário crie uma conta e gerencie apenas as suas solicitações.
 
-#### Endpoints:
+#### **Endpoints**
 
-- **GET `/user`**
-  - **Descrição**: Retorna todos os usuários cadastrados.
-  - **Exemplo de Resposta**: 
+- **GET `/user`**  
+  - **Descrição**: Retorna todos os usuários cadastrados.  
+  - **Exemplo de Resposta**:
     ```json
     [
       {
@@ -347,12 +282,12 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
     ]
     ```
 
-- **POST `/user`** 
-  - **Descrição**: Cria um novo usuário.
-  - **Dados de Exemplo (Body)**: 
+- **POST `/user`**  
+  - **Descrição**: Cria um novo usuário.  
+  - **Body**:
     ```json
     {
-      "nome": "User Example",
+      "name": "User Example",
       "email": "user@aluno.senai.br",
       "password": "senhaSegura123!",
       "isAdmin": "admin",
@@ -366,24 +301,27 @@ As rotas de usuário gerenciam o cadastro, autenticação e exclusão de usuári
     }
     ```
 
-- **PUT `/user/:email`**
-  - **Descrição**: Atualiza as informações de um usuário baseado em seu email.
-  - **Parâmetro de URL**: `email` - O email do usuário a ser atualizado.
-  - **Dados de Exemplo (Body)**:
+- **PUT `/user/:email`**  
+  - **Descrição**: Atualiza as informações de um usuário baseado em seu email.  
+  - **Parâmetro**:  
+    - `email`: O email do usuário a ser atualizado.  
+  - **Body**:
     ```json
     {
       "name": "User Example PUT"
     }
     ```
 
-- **GET `/user/:email`**
-  - **Descrição**: Retorna os detalhes de um usuário específico.
-  - **Parâmetro de URL**: `email` - O email do usuário.
-
-- **DELETE `/user/:email`**
-  - **Descrição**: Exclui um usuário baseado em seu email.
-  - **Parâmetro de URL**: `email` - O email do usuário.
-
+- **DELETE `/user/:email`**  
+  - **Descrição**: Exclui um usuário baseado em seu email.  
+  - **Parâmetro**:  
+    - `email`: O email do usuário.  
+  - **Exemplo de Resposta**:
+    ```json
+    {
+      "message": "Usuário removido com sucesso!"
+    }
+    ```
 ---
 ### Observações
 
