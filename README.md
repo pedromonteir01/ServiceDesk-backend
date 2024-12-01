@@ -20,6 +20,28 @@ npm install
   CREATE DATABASE bflow;
   ```
 - Ajuste as credenciais do banco de dados no arquivo `server.js`, se necessário.
+4. **Configurar arquivo .env:** 
+- Exemplo:
+  
+  ```
+  PORT=4000
+  DB_HOST=localhost
+  DB_PORT=5432
+  DB_PASSWORD=ds564
+  DB_USER=postgres
+  DB_NAME=bflow
+
+  SECRET=9d2d094be22851bc3b3df6d89b14b032
+
+
+  BUCKET=
+  AWS_PROFILE=
+  AWS_REGION=
+  AWS_ACCESS_KEY_ID=
+  AWS_SECRET_ACCESS_KEY=
+
+  POSTGRES_URL=your_key
+  ```
 
 ## Estrutura de arquivos
 
