@@ -322,6 +322,13 @@ const deleteUser = async (req, res) => {
         error: "user not found",
       });
     } else {
+
+      const token = (await pool.query('SELECT * FROM refreshToken WHERE email=$1', [email])).rows;
+
+      if(token) {
+        await pool.query('DELETE FROM refreshToken WHERE email=$1', [email]);
+      }
+
       //se existir, deleta
       await pool.query("DELETE FROM users WHERE email=$1;", [email]);
 
