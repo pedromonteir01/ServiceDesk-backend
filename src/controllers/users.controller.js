@@ -317,7 +317,7 @@ const deleteUser = async (req, res) => {
     ]);
 
     //verifica se existe
-    if (!user) {
+    if (!user.rowCount) {
       return res.status(404).send({
         error: "user not found",
       });
